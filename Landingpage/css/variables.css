@@ -1,0 +1,45 @@
+:root {
+
+  --color-black: #0a0a0a;
+  --color-dark-gray: #171717;
+  --color-gray: #2a2a2a;
+  --color-white: #ffffff;
+  --color-white-soft: rgba(255, 255, 255, 0.7);
+  --color-white-faint: rgba(255, 255, 255, 0.45);
+
+  --color-orange: #ff6b00;
+  --color-orange-light: #ff8c42;
+
+  --glass-bg: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(255, 255, 255, 0.08);
+
+  --font-main: "Poppins", sans-serif;
+
+  --fw-light: 300;
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+  --fw-extrabold: 800;
+
+  --space-xs: 8px;
+  --space-sm: 16px;
+  --space-md: 24px;
+  --space-lg: 48px;
+  --space-xl: 96px;
+  --space-2xl: 140px;
+
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+
+  --shadow-soft: 0 20px 60px rgba(0, 0, 0, 0.4);
+  --glow-orange: 0 0 80px rgba(255, 107, 0, 0.25);
+  --glow-orange-strong: 0 0 40px rgba(255, 107, 0, 0.45);
+
+  --container-width: 1200px;
+
+  --transition-fast: 0.2s ease;
+  --transition-medium: 0.4s ease;
+  --transition-slow: 0.8s ease;
+}

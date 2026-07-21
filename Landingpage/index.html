@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>HAVK — A Inteligência Artificial que impulsiona empresas</title>
+  <meta name="description" content="HAVK é a plataforma de Inteligência Artificial que transforma dados em resultados reais para o seu negócio. Automação, análises em tempo real e IA generativa em um só lugar." />
+  <meta name="theme-color" content="#0A0A0A" />
+
+  <meta property="og:title" content="HAVK — A Inteligência Artificial que impulsiona empresas" />
+  <meta property="og:description" content="Transforme dados em resultados reais com a HAVK." />
+  <meta property="og:type" content="website" />
+
+  <link rel="icon" href="assets/images/favicon.svg" type="image/svg+xml" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/variables.css" />   
+  <link rel="stylesheet" href="css/style.css" />       
+  <link rel="stylesheet" href="css/animations.css" />  
+  <link rel="stylesheet" href="css/responsive.css" />  
+</head>
+<body>
+
+  <header class="navbar" id="navbar">
+    <div class="container navbar__inner">
+      <a href="#" class="navbar__logo">HAVK</a>
+
+      <nav class="navbar__menu" id="navbarMenu">
+        <a href="#hero">Início</a>
+        <a href="#recursos">Recursos</a>
+        <a href="#como-funciona">Como funciona</a>
+        <a href="#sobre">Sobre</a>
+        <a href="#contato">Contato</a>
+      </nav>
+
+      <div class="navbar__actions">
+        <a href="#" class="btn btn--ghost">Entrar</a>
+        <a href="#contato" class="btn btn--primary">Começar Agora</a>
+      </div>
+
+      <button class="navbar__burger" id="navbarBurger" aria-label="Abrir menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    
+    <section class="hero" id="hero">
+      <div class="hero__glow"></div> 
+
+      <div class="container hero__grid">
+
+        <div class="hero__content reveal">
+          <span class="eyebrow">Inteligência Artificial para empresas</span>
+          <h1 class="hero__title">
+            A Inteligência Artificial que transforma
+            <span class="text-gradient">dados em resultados</span>
+          </h1>
+          <p class="hero__description">
+            A HAVK conecta sua empresa a uma IA capaz de automatizar tarefas,
+            analisar informações em tempo real e gerar decisões melhores, todos os dias.
+          </p>
+
+          <div class="hero__buttons">
+            <a href="#contato" class="btn btn--primary btn--large">Começar Agora</a>
+            <a href="#recursos" class="btn btn--secondary btn--large">Ver Demonstração</a>
+          </div>
+
+          <ul class="hero__checklist">
+            <li>✓ 14 dias grátis</li>
+            <li>✓ Sem cartão de crédito</li>
+            <li>✓ Cancelamento simples</li>
+          </ul>
+        </div>
+
+        <div class="hero__visual reveal">
+          <div class="dashboard-card glass">
+
+            <div class="dashboard-card__header">
+              <span class="dot dot--red"></span>
+              <span class="dot dot--yellow"></span>
+              <span class="dot dot--green"></span>
+              <span class="dashboard-card__title">Painel HAVK</span>
+            </div>
+
+            <div class="dashboard-card__stats">
+              <div class="stat-mini">
+                <span class="stat-mini__label">Receita</span>
+                <span class="stat-mini__value">R$ 84.2k</span>
+                <span class="stat-mini__trend stat-mini__trend--up">+12%</span>
+              </div>
+              <div class="stat-mini">
+                <span class="stat-mini__label">Clientes</span>
+                <span class="stat-mini__value">2.481</span>
+                <span class="stat-mini__trend stat-mini__trend--up">+8%</span>
+              </div>
+              <div class="stat-mini">
+                <span class="stat-mini__label">Conversão</span>
+                <span class="stat-mini__value">6.4%</span>
+                <span class="stat-mini__trend stat-mini__trend--up">+2%</span>
+              </div>
+            </div>
+
+            <div class="chart-line">
+              <svg viewBox="0 0 400 100" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#FF6B00" stop-opacity="0.35" />
+                    <stop offset="100%" stop-color="#FF6B00" stop-opacity="0" />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M0,69 C28.5,69 28.5,55 57,55 C85.5,55 85.5,62 114,62 C142.5,62 142.5,41 171,41 C199.5,41 199.5,51.5 228,51.5 C256.5,51.5 256.5,30.5 285,30.5 C313.5,30.5 313.5,44.5 342,44.5 C370.5,44.5 370.5,23.5 400,23.5 L400,100 L0,100 Z"
+                  fill="url(#chartFill)" />
+                <path
+                  d="M0,69 C28.5,69 28.5,55 57,55 C85.5,55 85.5,62 114,62 C142.5,62 142.5,41 171,41 C199.5,41 199.5,51.5 228,51.5 C256.5,51.5 256.5,30.5 285,30.5 C313.5,30.5 313.5,44.5 342,44.5 C370.5,44.5 370.5,23.5 400,23.5"
+                  fill="none" stroke="#FF8C42" stroke-width="2.5" stroke-linecap="round" />
+                <circle cx="400" cy="23.5" r="4.5" fill="#FF8C42" />
+              </svg>
+            </div>
+
+            <div class="dashboard-card__bottom">
+              <div class="chart-donut" role="img" aria-label="Gráfico de conversão 68%">
+                <span>68%</span>
+              </div>
+              <div class="activity-list">
+                <p class="activity-list__title">Atividades recentes</p>
+                <div class="activity-item">Novo cliente conectado</div>
+                <div class="activity-item">Relatório gerado por IA</div>
+                <div class="activity-item">Automação concluída</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section" id="beneficios">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="eyebrow">Por que a HAVK</span>
+          <h2>Feito para quem quer resultado, não complicação</h2>
+        </div>
+
+        <div class="grid grid--4">
+          <div class="card reveal">
+            <div class="card__icon">⚡</div>
+            <h3>Automação Inteligente</h3>
+            <p>Elimine tarefas repetitivas. A HAVK cuida do operacional enquanto sua equipe foca no que importa.</p>
+          </div>
+          <div class="card reveal">
+            <div class="card__icon">✨</div>
+            <h3>IA Generativa</h3>
+            <p>Crie textos, respostas e relatórios automaticamente com uma IA treinada para o seu negócio.</p>
+          </div>
+          <div class="card reveal">
+            <div class="card__icon">📊</div>
+            <h3>Análises em Tempo Real</h3>
+            <p>Veja o que está acontecendo agora. Sem esperar relatórios prontos no fim do mês.</p>
+          </div>
+          <div class="card reveal">
+            <div class="card__icon">🎯</div>
+            <h3>Resultados Reais</h3>
+            <p>Menos promessa, mais entrega. Empresas que usam HAVK reduzem custos e crescem mais rápido.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt" id="como-funciona">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="eyebrow">Simples assim</span>
+          <h2>Como funciona</h2>
+        </div>
+
+        <div class="timeline">
+          <div class="timeline__step reveal">
+            <div class="timeline__number">1</div>
+            <div class="timeline__icon">👤</div>
+            <h3>Criar conta</h3>
+            <p>Cadastro rápido, sem burocracia.</p>
+          </div>
+          <div class="timeline__step reveal">
+            <div class="timeline__number">2</div>
+            <div class="timeline__icon">🔗</div>
+            <h3>Conectar empresa</h3>
+            <p>Integre seus dados e ferramentas em minutos.</p>
+          </div>
+          <div class="timeline__step reveal">
+            <div class="timeline__number">3</div>
+            <div class="timeline__icon">🤖</div>
+            <h3>Utilizar IA</h3>
+            <p>A HAVK começa a automatizar e analisar tudo por você.</p>
+          </div>
+          <div class="timeline__step reveal">
+            <div class="timeline__number">4</div>
+            <div class="timeline__icon">🚀</div>
+            <h3>Obter resultados</h3>
+            <p>Acompanhe o crescimento real do seu negócio.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="recursos">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="eyebrow">Tudo em um só lugar</span>
+          <h2>Recursos</h2>
+        </div>
+
+        <div class="grid grid--3">
+          <div class="card reveal">
+            <div class="card__icon">💬</div>
+            <h3>Chat IA</h3>
+            <p>Converse com a IA da HAVK e obtenha respostas imediatas sobre seu negócio.</p>
+          </div>
+          <div class="card reveal">
+            <div class="card__icon">⚙️</div>
+            <h3>Automações</h3>
+            <p>Crie fluxos automáticos sem escrever uma linha de código.</p>
+          </div>
+          <div class="card reveal">
+            <div class="card__icon">🧾</div>
+            <h3>CRM</h3>
+            <p>Gerencie clientes e oportunidades em um painel único e organizado.</p>
+          </div>
+          <div class="card reveal">
+            <div class="card__icon">🔌</div>
+            <h3>API</h3>
+            <p>Integre a HAVK a qualquer sistema que sua empresa já utiliza.</p>
+          </div>
+          <div class="card reveal">
+            <div class="card__icon">📈</div>
+            <h3>Dashboard</h3>
+            <p>Visualize métricas importantes em tempo real, sem planilhas.</p>
+          </div>
+          <div class="card reveal">
+            <div class="card__icon">👥</div>
+            <h3>Equipe</h3>
+            <p>Convide colaboradores e defina permissões de acesso facilmente.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt" id="dashboard">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="eyebrow">Visão completa</span>
+          <h2>Um painel feito para decisões rápidas</h2>
+          <p class="section-heading__text">Receita, clientes, conversão e relatórios em um painel bonito e fácil de entender.</p>
+        </div>
+
+        <div class="dashboard-preview glass reveal">
+          <div class="dashboard-preview__stats">
+            <div class="stat-block">
+              <span class="stat-block__label">Receita mensal</span>
+              <span class="stat-block__value">R$ 128.450</span>
+            </div>
+            <div class="stat-block">
+              <span class="stat-block__label">Clientes ativos</span>
+              <span class="stat-block__value">3.902</span>
+            </div>
+            <div class="stat-block">
+              <span class="stat-block__label">Taxa de conversão</span>
+              <span class="stat-block__value">7.8%</span>
+            </div>
+          </div>
+
+          <div class="dashboard-preview__charts">
+            
+            <div class="chart-bars">
+              <div class="chart-bars__bar" style="--h: 40%"></div>
+              <div class="chart-bars__bar" style="--h: 65%"></div>
+              <div class="chart-bars__bar" style="--h: 50%"></div>
+              <div class="chart-bars__bar" style="--h: 80%"></div>
+              <div class="chart-bars__bar" style="--h: 60%"></div>
+              <div class="chart-bars__bar" style="--h: 95%"></div>
+            </div>
+            
+            <div class="chart-donut chart-donut--large" role="img" aria-label="Gráfico de relatórios 82%">
+              <span>82%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    
+
+    <section class="section" id="sobre">
+      <div class="container about">
+        <div class="section-heading reveal">
+          <span class="eyebrow">Nossa história</span>
+          <h2>Sobre a HAVK</h2>
+          <p class="section-heading__text">
+            A HAVK nasceu com um objetivo simples: tornar a Inteligência Artificial
+            acessível para empresas de qualquer tamanho, sem complicação técnica.
+            Hoje ajudamos centenas de negócios a automatizar processos e crescer com dados reais.
+          </p>
+        </div>
+
+        <div class="grid grid--3">
+          <div class="card reveal">
+            <h3>Missão</h3>
+            <p>Simplificar o uso de IA para que qualquer empresa consiga crescer com tecnologia.</p>
+          </div>
+          <div class="card reveal">
+            <h3>Visão</h3>
+            <p>Ser a principal plataforma de IA para empresas em crescimento na América Latina.</p>
+          </div>
+          <div class="card reveal">
+            <h3>Valores</h3>
+            <p>Simplicidade, transparência e resultado real acima de tudo.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta" id="contato">
+      <div class="container cta__inner reveal">
+        <h2>Pronto para transformar sua empresa com IA?</h2>
+        <p>Comece hoje mesmo. Sem cartão de crédito, sem compromisso.</p>
+        <a href="#contato" class="btn btn--primary btn--large">Começar Gratuitamente</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__grid">
+      <div class="footer__brand">
+        <p class="navbar__logo">HAVK</p>
+        <p>A Inteligência Artificial que impulsiona empresas.</p>
+      </div>
+
+      <div class="footer__links">
+        <h4>Empresa</h4>
+        <a href="#sobre">Sobre</a>
+        <a href="#contato">Contato</a>
+      </div>
+
+      <div class="footer__links">
+        <h4>Produto</h4>
+        <a href="#recursos">Recursos</a>
+      </div>
+
+      <div class="footer__newsletter">
+        <h4>Newsletter</h4>
+        <p>Receba novidades sobre IA direto no seu e-mail.</p>
+        <form class="newsletter-form">
+          <input type="email" placeholder="Seu e-mail" required />
+          <button type="submit" class="btn btn--primary">Enviar</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="container footer__bottom">
+      <p>&copy; 2026 HAVK. Todos os direitos reservados.</p>
+      <div class="footer__social">
+        <a href="#" aria-label="Instagram">IG</a>
+        <a href="#" aria-label="LinkedIn">IN</a>
+        <a href="#" aria-label="Twitter/X">X</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/scroll.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>
