@@ -1,0 +1,125 @@
+.idea-card {
+  min-width: 0;
+  padding: clamp(1.2rem, 4vw, 2.2rem);
+  border: 1px solid var(--color-line);
+  border-radius: 1.2rem;
+  background: var(--color-surface-raised);
+  overflow-wrap: anywhere;
+}
+
+.idea-card__header > p:first-child {
+  margin: 0;
+  color: var(--color-accent-strong);
+  font-size: 0.75rem;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+h3 {
+  margin: 0.35rem 0 0.6rem;
+  font-size: clamp(1.5rem, 4vw, 2.3rem);
+  line-height: 1.12;
+}
+
+.idea-summary {
+  max-width: 52rem;
+  margin-bottom: 1.4rem;
+  color: var(--color-muted);
+  font-size: 1.05rem;
+  line-height: 1.65;
+}
+
+.idea-context {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+  margin: 0 0 1.2rem;
+}
+
+.idea-context div {
+  min-width: 0;
+  padding: 0.9rem;
+  border-radius: 0.7rem;
+  background: #f2eee5;
+}
+
+dt,
+h4 {
+  font-weight: 800;
+}
+
+dt {
+  color: var(--color-muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+dd {
+  margin: 0.35rem 0 0;
+  line-height: 1.5;
+}
+
+.story-blocks {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.story-blocks li {
+  min-width: 0;
+  padding: 1rem;
+  border-left: 0.3rem solid var(--color-accent);
+  border-radius: 0.35rem 0.75rem 0.75rem 0.35rem;
+  background: #fff7f1;
+}
+
+h4 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+}
+
+h4 span {
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  font-weight: 650;
+}
+
+.story-blocks p,
+.idea-notes p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.idea-notes,
+.idea-list,
+.idea-sources {
+  margin-top: 1.3rem;
+}
+
+.idea-list ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.idea-list li {
+  padding: 0.35rem 0.65rem;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  background: #f2eee5;
+}
+
+@media (max-width: 46rem) {
+  .idea-context,
+  .story-blocks {
+    grid-template-columns: 1fr;
+  }
+}

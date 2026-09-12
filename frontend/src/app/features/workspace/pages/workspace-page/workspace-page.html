@@ -1,0 +1,311 @@
+<section class="workspace" aria-label="Workspace editorial">
+  <div class="workspace-grid">
+    @if (sidebarOpen()) {
+      <button type="button" class="conversation-sidebar-backdrop" aria-label="Fechar conversas"
+        (click)="sidebarOpen.set(false)"></button>
+    }
+    <aside id="conversation-navigation" class="conversation-sidebar" [class.is-open]="sidebarOpen()">
+      <div class="sidebar-heading">
+        <h2>Conversas anteriores</h2>
+        <div class="sidebar-heading-actions">
+          <button type="button" (click)="startNewConversation()">Nova conversa</button>
+          <button type="button" class="conversation-sidebar-close" aria-label="Fechar conversas"
+            (click)="sidebarOpen.set(false)">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m6.4 5 5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6L6.4 19 5 17.6l5.6-5.6L5 6.4 6.4 5Z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      @if (conversations().length === 0) {
+        <p class="empty-copy">Suas conversas editoriais aparecerão aqui.</p>
+      } @else {
+        <nav aria-label="Conversas editoriais">
+          @for (conversation of conversations(); track conversation.id) {
+            <a [routerLink]="['/workspace', conversation.id]"
+              [class.is-current]="selectedConversationId() === conversation.id"
+              [attr.aria-current]="selectedConversationId() === conversation.id ? 'page' : null"
+              (click)="beginConversationSelection(conversation.id)">
+              @if (selectedConversationId() === conversation.id) {
+                <span class="visually-hidden">Conversa atual: </span>
+              }
+              <strong>{{ conversationTitle(conversation) }}</strong>
+              <span>{{ conversation.accountDisplayName }}</span>
+              <small>{{ formatDate(conversationDate(conversation)) }}</small>
+            </a>
+          }
+        </nav>
+      }
+    </aside>
+
+    <main class="conversation-main">
+      <div class="research-mode-panel">
+        <button type="button" class="conversation-toggle" (click)="sidebarOpen.set(!sidebarOpen())"
+          [attr.aria-expanded]="sidebarOpen()" aria-controls="conversation-navigation"
+          [attr.aria-label]="sidebarOpen() ? 'Fechar opções editoriais' : 'Abrir opções editoriais'">
+          <svg class="editorial-options-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 6h16v2H4V6Zm0 5h16v2H4v-2Zm0 5h16v2H4v-2Z" />
+          </svg>
+          <span class="conversation-toggle-label">Conversas</span>
+        </button>
+        <div class="research-mode-selector" role="tablist" aria-label="Escolher modo de pesquisa"
+          [attr.data-active]="activeResearchMode()">
+          <button class="research-mode-tab" type="button" role="tab" [attr.aria-selected]="activeResearchMode() === 'SURPRISE_ME'"
+            [class.is-active]="activeResearchMode() === 'SURPRISE_ME'"
+            [tabIndex]="0"
+            (click)="switchResearchMode('SURPRISE_ME')">✨ Me surpreenda</button>
+          <button class="research-mode-tab" type="button" role="tab" [attr.aria-selected]="activeResearchMode() === 'SEARCH'"
+            [class.is-active]="activeResearchMode() === 'SEARCH'"
+            [tabIndex]="0"
+            (click)="switchResearchMode('SEARCH')">🔎 Pesquisar</button>
+        </div>
+      </div>
+      <div #feedViewport class="conversation-feed-shell" (scroll)="handleFeedScroll($event)"
+        [attr.aria-busy]="conversationLoading()" data-testid="workspace-feed-region">
+      @if (status() === 'loading' || conversationLoading()) {
+        <div class="workspace-state" role="status">
+          <span class="loading-spinner" aria-hidden="true"></span>
+          {{ status() === 'loading' ? 'Carregando workspace…' : 'Carregando conversa…' }}
+        </div>
+      }
+
+      @if (status() === 'empty') {
+        <div class="workspace-state">
+          <h2>Selecione uma conta para começar</h2>
+          <p>Quando há mais de uma conta e nenhuma escolha segura, o HAVK não seleciona silenciosamente.</p>
+          <a routerLink="/contas-de-plataforma">Gerenciar contas</a>
+        </div>
+      }
+
+      @if (message()) {
+        <p class="workspace-message" role="alert">{{ message() }}</p>
+      }
+      @if (conversationError() && !hasFeedData()) {
+        <p class="workspace-message conversation-error" role="alert">{{ conversationError() }}</p>
+      }
+      @if (actionMessage()) {
+        <p class="action-message" role="status">{{ actionMessage() }}</p>
+      }
+
+      @if (account() && !conversationLoading() && (!conversationError() || hasFeedData())) {
+        <section class="feed" aria-label="Feed editorial" aria-live="polite"
+          [attr.aria-busy]="isBusy() || conversationLoading()">
+          @if (feedEntries().length === 0) {
+            <article class="feed-entry welcome-entry">
+              <div class="entry-identity"><span class="havk-avatar" aria-hidden="true">H</span><strong>HAVK</strong></div>
+              <div class="entry-content">
+                <h2>{{ activeResearchMode() === 'SEARCH' ? 'O que você quer pesquisar?' : 'Pronto para uma descoberta?' }}</h2>
+                <p>{{ activeResearchMode() === 'SEARCH'
+                  ? 'Converse naturalmente. Se o assunto estiver claro, a pesquisa começa sem perguntas desnecessárias.'
+                  : 'O HAVK usará o contexto do seu canal para encontrar uma oportunidade.' }}</p>
+              </div>
+            </article>
+          }
+
+          @for (entry of feedEntries(); track feedEntryKey(entry)) {
+            <article class="feed-entry" [attr.data-entry-type]="entry.entryType"
+              [attr.data-feed-key]="feedEntryKey(entry)">
+              <div class="entry-identity">
+                <span [class.user-avatar]="entry.entryType === 'USER_REQUEST' || entry.entryType === 'USER_REFINEMENT'"
+                  [class.havk-avatar]="entry.entryType !== 'USER_REQUEST' && entry.entryType !== 'USER_REFINEMENT'"
+                  aria-hidden="true">
+                  {{ entry.entryType === 'USER_REQUEST' || entry.entryType === 'USER_REFINEMENT' ? 'V' : 'H' }}
+                </span>
+                <strong>{{ entryLabel(entry) }}</strong>
+                <time [attr.datetime]="entry.createdAt">{{ formatDate(entry.createdAt) }}</time>
+              </div>
+              <div class="entry-content">
+                @if (entry.displayText) {
+                  <p class="entry-text" [attr.role]="entry.entryType === 'ERROR' ? 'alert' : null">
+                    {{ entry.displayText }}
+                  </p>
+                }
+
+                @if (isNoRelevantTrend(entry)) {
+                  <p class="warning-guidance">Você pode descrever um assunto evergreen diretamente na mensagem ou tentar novamente quando houver novos sinais.</p>
+                }
+
+                @if (requestFor(entry); as request) {
+                  <div class="processing-entry" [class.is-failed]="request.status === 'FAILED'">
+                    <div>
+                      <strong>{{ processingLabel(request) }}</strong>
+                      <span>{{ processingProgress(request) }}%</span>
+                    </div>
+                    <progress max="100" [value]="processingProgress(request)">{{ processingProgress(request) }}%</progress>
+                    @if (shouldShowFailureMessage(entry, request)) {
+                      <p role="alert">{{ request.failureMessage }}</p>
+                    }
+                    @if (request.status === 'NO_RELEVANT_OPPORTUNITY') {
+                      <p role="status">Nenhuma oportunidade suficientemente relevante foi encontrada para esta pesquisa e período. Tente outro recorte ou período mais tarde.</p>
+                    }
+                  </div>
+                }
+
+                @if (reportFor(entry); as report) {
+                  <div class="report-result">
+                    <div class="report-heading">
+                      <div>
+                        <p class="eyebrow">Versão {{ report.reportVersion ?? 1 }} · {{ report.generationMode ?? 'USER_DIRECTED' }}</p>
+                        <h2>{{ report.title }}</h2>
+                        <p>{{ report.summary }}</p>
+                      </div>
+                      @if (report.simulated) {
+                        <span class="simulation-badge">Simulado</span>
+                      } @else {
+                        <span class="real-result-badge">Resultado real</span>
+                      }
+                    </div>
+
+                    <p class="report-objective"><strong>Objetivo:</strong> {{ report.objective }}</p>
+                    @if (report.scriptContractVersion === 'report-contract-v3') {
+                      <dl class="script-summary report-context" aria-label="Resumo do roteiro">
+                        <div><dt>Formato</dt><dd>{{ formatName(report.recommendedFormat) }}</dd></div>
+                        <div><dt>Duração</dt><dd>{{ report.totalEstimatedDurationLabel }}</dd></div>
+                        <div><dt>Ritmo</dt><dd>{{ report.speakingRateWordsPerMinute }} ppm</dd></div>
+                      </dl>
+                      <p class="format-reason">{{ report.formatDecision?.reason }}</p>
+                    }
+                    <details class="report-metadata">
+                      <summary>Detalhes técnicos</summary>
+                      <dl class="report-context">
+                        <div><dt>Conta</dt><dd>{{ report.platformCode }} · {{ report.channelName }}</dd></div>
+                        <div><dt>Assunto</dt><dd>{{ report.requestedTopic ?? report.trends?.[0]?.title ?? 'Descoberta automática' }}</dd></div>
+                        <div><dt>Contexto</dt><dd>{{ report.contextSufficiency }} · {{ confidence(report.contextConfidence) }}</dd></div>
+                        <div><dt>Formato</dt><dd>{{ report.recommendedFormat ?? 'Não informado' }}</dd></div>
+                        <div><dt>Versão</dt><dd>{{ report.reportVersion ?? 1 }}</dd></div>
+                        <div><dt>Provider e modelo</dt><dd>{{ report.provider ?? report.providerVersion }} · {{ report.model ?? 'não informado' }}</dd></div>
+                      </dl>
+                    </details>
+
+                    @if (report.trends?.length) {
+                      <section class="inline-trends" aria-label="Oportunidades selecionadas">
+                        <h3>Oportunidade selecionada</h3>
+                        @for (trend of report.trends; track trend.trendResultId) {
+                          <article>
+                            <h4>{{ trend.title }}</h4>
+                            <p>{{ trend.relevanceReason }}</p>
+                            <dl>
+                              <div><dt>Novidade e relevância</dt><dd>{{ trend.relevance }}/100</dd></div>
+                              <div><dt>Confiança</dt><dd>{{ confidence(trend.rankingConfidence) }}</dd></div>
+                              <div><dt>Coleta</dt><dd>{{ formatDate(trend.collectedAt) }}</dd></div>
+                              <div><dt>Fonte</dt><dd>{{ trend.sourceName }} · {{ trend.sourceReliability }}</dd></div>
+                            </dl>
+                          </article>
+                        }
+                      </section>
+                    }
+
+                    <section class="methodology" aria-label="Estrutura editorial">
+                      @for (section of report.sections ?? []; track section.key) {
+                        <article>
+                          <header>
+                            <h3>{{ sectionTitle(section.key) }}</h3>
+                            @if (section.estimatedSpeechSeconds) {
+                              <span>{{ timelineLabel(section.startSecond, section.endSecond) }} · {{ section.estimatedSpeechSeconds }}s</span>
+                            }
+                          </header>
+                          <p class="feed-script">{{ section.spokenScript ?? section.content }}</p>
+                          @if (section.transitionToNextSection) {
+                            <p class="feed-transition"><strong>Transição:</strong> {{ section.transitionToNextSection }}</p>
+                          }
+                          @if (section.variations.length) {
+                            <details><summary>Variações</summary><ul>@for (variation of section.variations; track variation) { <li>{{ variation }}</li> }</ul></details>
+                          }
+                          @if (section.evidence.length) {
+                            <details><summary>Evidências</summary><ul>@for (evidence of section.evidence; track evidence) { <li>{{ evidence }}</li> }</ul></details>
+                          }
+                        </article>
+                      }
+                    </section>
+
+                    <section class="sources" [id]="'sources-' + report.id">
+                      <h3>Fontes</h3>
+                      @if (report.sources.length === 0) { <p>Nenhuma fonte externa foi usada nesta versão.</p> }
+                      @for (source of report.sources; track source.id) {
+                        <a [href]="source.reference" target="_blank" rel="noopener noreferrer">{{ source.sourceName }} · {{ source.title }}</a>
+                      }
+                    </section>
+
+                    <div class="report-actions">
+                      <a [routerLink]="['/relatorios', report.id]">Abrir relatório completo</a>
+                      <button type="button" (click)="copyReport(report)">Copiar</button>
+                      <a [href]="'#sources-' + report.id">Ver fontes</a>
+                      <a routerLink="/memoria-de-conteudo">Ver histórico relacionado</a>
+                      <button type="button" (click)="openRefinement(report.id)" [disabled]="isBusy()">Criar nova versão</button>
+                      <button type="button" class="quiet danger" (click)="archiveConversation()" [disabled]="isBusy()">Arquivar conversa</button>
+                    </div>
+
+                    @if (refinementReportId() === report.id) {
+                      <form class="refinement-form" (submit)="submitRefinement($event)" novalidate>
+                        <label [for]="'refinement-' + report.id">Orientação para a nova versão</label>
+                        <textarea [id]="'refinement-' + report.id" rows="4"
+                          placeholder="Ex.: torne o conteúdo mais técnico e direcionado a desenvolvedores Java iniciantes."
+                          [formField]="refinementForm.additionalInstructions"></textarea>
+                        @if (refinementForm.additionalInstructions().touched()) {
+                          @for (error of refinementForm.additionalInstructions().errors(); track error.kind + $index) { <p class="field-error">{{ error.message }}</p> }
+                        }
+                        <div><button type="submit" [disabled]="isBusy()">Gerar nova versão</button><button type="button" class="quiet" (click)="cancelRefinement()">Cancelar</button></div>
+                      </form>
+                    }
+                  </div>
+                }
+              </div>
+            </article>
+          }
+
+          @if (trackingWarning()) { <p class="tracking-warning" role="status">{{ trackingWarning() }}</p> }
+        </section>
+
+        @if (newUpdatesAvailable()) {
+          <button type="button" class="new-update-button" (click)="showLatestUpdate()">
+            Ver nova atualização
+          </button>
+        }
+      }
+      </div>
+
+      @if (account()) {
+        <form class="composer" (submit)="submitRequest($event)" novalidate
+          aria-label="Mensagem para o HAVK" [attr.aria-busy]="isBusy()">
+          <fieldset>
+            @if (activeResearchMode() === 'SEARCH') {
+              <div class="composer-search-row">
+                <label for="workspace-message" class="visually-hidden">O que você quer pesquisar?</label>
+                <textarea #composerTextarea id="workspace-message" rows="1" placeholder="Pesquisar um tema…"
+                  [formField]="composerForm.message" (input)="resizeComposerTextarea($event)"
+                  (keydown)="handleComposerKeydown($event)"
+                  aria-describedby="workspace-message-errors"></textarea>
+                <button type="submit" class="submit-button" [disabled]="!canSend() || composerForm().submitting()"
+                  [attr.aria-disabled]="!canSend()" [attr.aria-busy]="semanticChatPending()"
+                  [attr.aria-label]="semanticChatPending() ? 'Pesquisando' : 'Pesquisar'" title="Pesquisar">
+                  @if (semanticChatPending()) {
+                    <span class="loading-spinner" aria-hidden="true"></span>
+                  } @else {
+                    <span class="search-submit-icon" aria-hidden="true">↑</span>
+                  }
+                </button>
+                <div id="workspace-message-errors" class="field-errors" aria-live="polite">
+                  @if (composerForm.message().touched()) { @for (error of composerForm.message().errors(); track error.kind + $index) { <p>{{ error.message }}</p> } }
+                </div>
+              </div>
+            } @else {
+              <div class="surprise-composer">
+                <div><strong>Encontre oportunidades com base no seu canal.</strong><p>Seu perfil, público e histórico editorial serão a autoridade desta descoberta.</p></div>
+                <button type="button" class="submit-button" (click)="generateWithCurrentTrends()"
+                  [disabled]="!canGenerateTrends()" [attr.aria-disabled]="!canGenerateTrends()"
+                  [attr.aria-busy]="submissionKind() === 'trends'">
+                  @if (submissionKind() === 'trends') { <span class="loading-spinner" aria-hidden="true"></span> Iniciando… } @else { ✨ Me surpreenda }
+                </button>
+              </div>
+              @if (!account()?.trendGenerationAvailable) {
+                <p class="trend-unavailable" role="status">
+                  {{ trendUnavailableReason() }} <a routerLink="/perfil/revisao">Revisar perfil</a>
+                </p>
+              }
+            }
+          </fieldset>
+        </form>
+      }
+    </main>
+  </div>
+</section>

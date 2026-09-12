@@ -1,0 +1,20 @@
+<div class="account-selector">
+  <label for="platform-account-context">Conta de plataforma</label>
+  @if (context.status() === 'loading') {
+    <p role="status">Carregando contas…</p>
+  } @else if (context.status() === 'empty') {
+    <p>Nenhuma conta cadastrada.</p>
+  } @else if (context.status() === 'error') {
+    <p role="alert">{{ context.error() }}</p>
+  } @else {
+    <select id="platform-account-context" [value]="context.selectedId() ?? ''" (change)="select($event)">
+      @if (context.accounts().length > 1) { <option value="">Selecione uma conta</option> }
+      @for (account of context.accounts(); track account.id) {
+        <option [value]="account.id">{{ account.platformName }} · {{ account.displayName }}{{ account.handle ? ' · ' + account.handle : '' }}</option>
+      }
+    </select>
+    @if (context.selected(); as selected) {
+      <p><strong>{{ selected.platformName }}</strong> · {{ selected.displayName }} <span>{{ selected.connectionStatus }}</span></p>
+    }
+  }
+</div>

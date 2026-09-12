@@ -1,0 +1,118 @@
+<article class="idea-card" [attr.aria-labelledby]="headingId()" [attr.data-idea-id]="idea().id">
+  <header class="idea-card__header">
+    <p>Ideia {{ displayNumber() }}</p>
+    <h3 [id]="headingId()">{{ idea().provisionalTitle }}</h3>
+    <p class="idea-summary">{{ idea().summary }}</p>
+  </header>
+
+  <dl class="idea-context">
+    <div>
+      <dt>Público recomendado</dt>
+      <dd>{{ idea().targetAudience }}</dd>
+    </div>
+    <div>
+      <dt>Tendência relacionada</dt>
+      <dd>{{ idea().relatedTrend }}</dd>
+    </div>
+    <div>
+      <dt>Justificativa de compatibilidade</dt>
+      <dd>{{ idea().compatibilityJustification }}</dd>
+    </div>
+    @if (idea().relevanceLevel) {
+      <div>
+        <dt>Relevância</dt>
+        <dd>{{ idea().relevanceLevel }}</dd>
+      </div>
+    }
+    @if (idea().competitionLevel) {
+      <div>
+        <dt>Concorrência</dt>
+        <dd>{{ idea().competitionLevel }}</dd>
+      </div>
+    }
+    @if (idea().urgencyLevel) {
+      <div>
+        <dt>Urgência</dt>
+        <dd>{{ idea().urgencyLevel }}</dd>
+      </div>
+    }
+  </dl>
+
+  @if (idea().opportunities?.length) {
+    <section class="idea-list" aria-label="Oportunidades usadas nesta ideia">
+      <h4>Oportunidades usadas</h4>
+      <ul>
+        @for (opportunity of idea().opportunities; track opportunity.opportunityContextId) {
+          <li><strong>{{ opportunity.relationType === 'PRIMARY' ? 'Principal' : 'Apoio' }}:</strong>
+            {{ opportunity.displayTopic }}</li>
+        }
+      </ul>
+    </section>
+  }
+
+  <section class="story-section" aria-label="Estrutura narrativa da ideia">
+    <ol class="story-blocks">
+      <li>
+        <h4>Gancho <span lang="en">Hook</span></h4>
+        <p>{{ idea().hook }}</p>
+      </li>
+      <li>
+        <h4>Problema <span lang="en">Problem</span></h4>
+        <p>{{ idea().problem }}</p>
+      </li>
+      <li>
+        <h4>Solução <span lang="en">Solution</span></h4>
+        <p>{{ idea().solution }}</p>
+      </li>
+      <li>
+        <h4>Diferencial <span lang="en">Differentiator</span></h4>
+        <p>{{ idea().differentiator }}</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="idea-notes" aria-label="Observações da ideia">
+    <h4>Observações</h4>
+    <p>{{ idea().notes }}</p>
+  </section>
+
+  @if (idea().keywords.length > 0) {
+    <section class="idea-list" aria-labelledby="keywords-{{ idea().id }}">
+      <h4 id="keywords-{{ idea().id }}">Palavras-chave</h4>
+      <ul>
+        @for (keyword of idea().keywords; track keyword) {
+          <li>{{ keyword }}</li>
+        }
+      </ul>
+    </section>
+  }
+
+  @if (idea().risks.length > 0) {
+    <section class="idea-list" aria-labelledby="risks-{{ idea().id }}">
+      <h4 id="risks-{{ idea().id }}">Riscos</h4>
+      <ul>
+        @for (risk of idea().risks; track $index) {
+          <li>{{ risk }}</li>
+        }
+      </ul>
+    </section>
+  }
+
+  @if (idea().limitations.length > 0) {
+    <section class="idea-list" aria-labelledby="limitations-{{ idea().id }}">
+      <h4 id="limitations-{{ idea().id }}">Limitações</h4>
+      <ul>
+        @for (limitation of idea().limitations; track $index) {
+          <li>{{ limitation }}</li>
+        }
+      </ul>
+    </section>
+  }
+
+  @if (sources().length > 0) {
+    <section class="idea-sources" aria-labelledby="sources-{{ idea().id }}">
+      <h4 id="sources-{{ idea().id }}">Fontes desta ideia</h4>
+      <app-report-source-list [sources]="sources()" />
+    </section>
+  }
+</article>

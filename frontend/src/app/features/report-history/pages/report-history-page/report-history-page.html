@@ -1,0 +1,149 @@
+<section
+  class="report-history shell"
+  aria-labelledby="report-history-title"
+  [attr.aria-busy]="isLoading()"
+>
+  <header class="page-header">
+    <div class="page-header-top">
+      <div>
+        <p class="eyebrow">Seus relatórios</p>
+        <h1 id="report-history-title" #pageHeading tabindex="-1">Histórico de relatórios</h1>
+      </div>
+      <a class="primary-action" routerLink="/workspace">Abrir workspace</a>
+    </div>
+    <p>
+      Consulte os relatórios concluídos e retome as ideias geradas para o seu canal.
+    </p>
+  </header>
+
+  <div class="history-filters" aria-label="Filtros do histórico">
+    <app-platform-account-selector (changed)="accountChanged($event)" />
+    <div class="platform-filter">
+      <label for="history-platform">Filtrar por plataforma</label>
+      <select id="history-platform" [value]="platformFilter() ?? ''" (change)="platformChanged($event)">
+        <option value="">Todas as plataformas</option>
+        @for (platform of platformOptions(); track platform[0]) {
+          <option [value]="platform[0]">{{ platform[1] }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  @if (deletionAnnouncement(); as message) {
+    <p class="deletion-announcement" role="status" aria-live="polite">{{ message }}</p>
+  }
+
+  @if ((state().status === 'idle' || state().status === 'loading') && !page()) {
+    <div class="state-card">
+      <h2>Carregando histórico</h2>
+      <p role="status" aria-live="polite">Buscando seus relatórios mais recentes…</p>
+    </div>
+  }
+
+  @if (state().status === 'loading' && page()) {
+    <p class="transition-status" role="status" aria-live="polite">
+      Carregando página {{ loadingPageNumber() }}…
+    </p>
+  }
+
+  @if (error(); as currentError) {
+    <div class="state-card state-card--error" role="alert">
+      <p class="eyebrow">Não foi possível consultar</p>
+      <h2>{{ errorTitle() }}</h2>
+      <p>{{ currentError.message }}</p>
+      <div class="state-actions">
+        @if (currentError.canRetry) {
+          <button type="button" class="primary-action" (click)="retry()">Tentar novamente</button>
+        }
+        @if (currentError.kind === 'invalid-pagination') {
+          <button type="button" class="secondary-action" (click)="goToFirstPage()">
+            Ir para a primeira página
+          </button>
+        }
+      </div>
+    </div>
+  }
+
+  @if (state().status === 'empty') {
+    <div class="state-card state-card--empty" role="status">
+      <p class="eyebrow">Histórico vazio</p>
+      <h2>Você ainda não possui relatórios</h2>
+      <p>Gere o primeiro relatório para transformar tendências em ideias para o seu canal.</p>
+      <a class="primary-action" routerLink="/workspace">Gerar primeiro relatório</a>
+    </div>
+  }
+
+  @if (page(); as currentPage) {
+    @if (currentPage.content.length > 0) {
+      <div class="results-heading">
+        <h2>Relatórios encontrados</h2>
+        <p>
+          {{ currentPage.totalElements }}
+          {{ currentPage.totalElements === 1 ? 'relatório disponível' : 'relatórios disponíveis' }}
+        </p>
+      </div>
+
+      <ol class="history-list">
+        @for (report of currentPage.content; track report.id) {
+          <li>
+            <app-report-history-item
+              [report]="report"
+              (deleteRequested)="beginDelete(report)"
+            />
+          </li>
+        }
+      </ol>
+
+      <nav class="pagination" aria-label="Paginação do histórico">
+        <p class="page-position" aria-live="polite">
+          Página <strong>{{ currentPage.page + 1 }}</strong> de
+          <strong>{{ currentPage.totalPages }}</strong>
+        </p>
+        <div class="pagination-actions">
+          <button
+            type="button"
+            (click)="goToFirstPage()"
+            [disabled]="currentPage.first || isLoading()"
+            aria-label="Ir para a primeira página"
+          >
+            Primeira
+          </button>
+          <button
+            type="button"
+            (click)="goToPreviousPage()"
+            [disabled]="currentPage.first || isLoading()"
+            aria-label="Ir para a página anterior"
+          >
+            Anterior
+          </button>
+          <button
+            type="button"
+            (click)="goToNextPage()"
+            [disabled]="currentPage.last || isLoading()"
+            aria-label="Ir para a próxima página"
+          >
+            Próxima
+          </button>
+          <button
+            type="button"
+            (click)="goToLastPage()"
+            [disabled]="currentPage.last || isLoading()"
+            aria-label="Ir para a última página"
+          >
+            Última
+          </button>
+        </div>
+      </nav>
+    }
+  }
+
+  <app-report-delete-dialog
+    [open]="selectedReport() !== null"
+    [reportTitle]="selectedReport()?.title ?? ''"
+    [deleting]="deletionState().status === 'deleting'"
+    [errorMessage]="deletionError()?.message ?? null"
+    [canRetry]="deletionError()?.canRetry ?? true"
+    (cancelled)="cancelDelete()"
+    (confirmed)="confirmDelete()"
+  />
+</section>

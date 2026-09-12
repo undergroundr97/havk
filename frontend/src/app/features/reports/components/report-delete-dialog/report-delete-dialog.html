@@ -1,0 +1,58 @@
+@if (open()) {
+  <div class="dialog-backdrop">
+    <section
+      #dialogPanel
+      class="delete-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="delete-dialog-title"
+      aria-describedby="delete-dialog-description"
+      tabindex="-1"
+      (keydown)="handleKeydown($event)"
+    >
+      <p class="eyebrow">Ação irreversível</p>
+      <h2 id="delete-dialog-title">Excluir este relatório?</h2>
+      <p id="delete-dialog-description">
+        “{{ reportTitle() }}” será excluído permanentemente. A solicitação e sua trilha de
+        auditoria serão preservadas, mas o conteúdo do relatório não poderá ser recuperado.
+      </p>
+
+      @if (deleting()) {
+        <p class="dialog-status" role="status" aria-live="polite">Excluindo relatório…</p>
+      }
+      @if (errorMessage(); as message) {
+        <p class="dialog-error" role="alert">{{ message }}</p>
+      }
+
+      <div class="dialog-actions">
+        <button
+          #dialogAction
+          #cancelButton
+          type="button"
+          class="secondary-action"
+          [disabled]="deleting()"
+          (click)="cancel()"
+        >
+          Cancelar
+        </button>
+        @if (errorMessage() === null || canRetry()) {
+          <button
+            #dialogAction
+            type="button"
+            class="destructive-action"
+            [disabled]="deleting()"
+            (click)="confirm()"
+          >
+            @if (deleting()) {
+              Excluindo…
+            } @else if (errorMessage()) {
+              Tentar excluir novamente
+            } @else {
+              Excluir relatório
+            }
+          </button>
+        }
+      </div>
+    </section>
+  </div>
+}

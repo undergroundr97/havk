@@ -1,0 +1,22 @@
+:host { display: block; }
+.channel-health { margin-bottom: 1.25rem; border: 1px solid var(--color-line); border-radius: 1.1rem; background: var(--color-surface-raised); padding: clamp(1.15rem, 3vw, 1.75rem); }
+.health-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1.2rem; }
+h2, p { margin-top: 0; }
+h2 { margin-bottom: .35rem; font-size: clamp(1.35rem, 2.5vw, 2rem); }
+.health-heading p:last-child { margin-bottom: 0; color: var(--color-muted); line-height: 1.55; }
+.eyebrow { margin-bottom: .5rem; color: var(--color-accent-strong); font-size: .74rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.simulated-badge { flex: none; display: inline-flex; border-radius: 999px; background: #fff0bd; color: #5c3d00; padding: .4rem .7rem; font-size: .75rem; }
+.health-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: .8rem; }
+.health-card { min-width: 0; border: 1px solid var(--color-line); border-radius: .9rem; background: #f7f5ef; padding: 1rem; }
+.health-card.is-insufficient { border-style: dashed; }
+.card-title { margin-bottom: .45rem; color: var(--color-muted); font-size: .76rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+.card-value { display: block; margin-bottom: .45rem; color: var(--color-ink); font-size: clamp(1.1rem, 2vw, 1.45rem); line-height: 1.2; overflow-wrap: anywhere; }
+.card-explanation { min-height: 2.7em; margin-bottom: .7rem; color: var(--color-muted); line-height: 1.45; }
+.confidence { display: inline-flex; gap: .35rem; margin-bottom: .65rem; border-radius: .4rem; background: #e7ece6; color: #314b37; padding: .3rem .45rem; font-size: .75rem; font-weight: 750; }
+.criterion { margin-bottom: 0; border-top: 1px solid var(--color-line); color: var(--color-muted); padding-top: .65rem; font-size: .75rem; line-height: 1.45; }
+.criterion span { color: var(--color-ink); font-weight: 750; }
+.health-state { border-radius: .8rem; background: #f1f2ed; padding: 1.1rem; }
+.health-state p { margin: .35rem 0 0; color: var(--color-muted); }
+.health-error { border: 1px solid #a43d32; background: #fff2ef; }
+@media (max-width: 40rem) { .health-heading { flex-direction: column; } .health-grid { grid-template-columns: 1fr; } }
+

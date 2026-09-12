@@ -1,0 +1,275 @@
+<section class="profile-page shell" aria-labelledby="profile-title">
+  <header class="profile-heading">
+    <div>
+      <p class="eyebrow">Perfil do criador</p>
+      <h1 id="profile-title">
+        @if (mode() === 'onboarding') {
+          Conte ao HAVK como você cria.
+        } @else {
+          Ajuste o contexto das suas ideias.
+        }
+      </h1>
+      <p>
+        Os campos marcados com <span aria-hidden="true">*</span><span class="sr-only">asterisco</span>
+        são obrigatórios. Use uma linha por item nos campos de lista.
+      </p>
+    </div>
+    <div class="completion" aria-label="Completude dos dados mínimos">
+      <strong>{{ completion() }}%</strong>
+      <span>dados mínimos</span>
+    </div>
+  </header>
+
+  @switch (viewState().status) {
+    @case ('idle') {
+      <p class="state-message" role="status">Preparando seu perfil…</p>
+    }
+    @case ('loading') {
+      <p class="state-message" role="status">{{ viewState().message }}</p>
+    }
+    @case ('empty') {
+      <p class="state-message state-message--empty" role="status">{{ viewState().message }}</p>
+    }
+    @case ('error') {
+      <div class="state-message state-message--error" role="alert">
+        <p>{{ viewState().message }}</p>
+        @if (viewState().canRetryLoad) {
+          <button type="button" class="secondary-button" (click)="retryLoad()">Tentar carregar novamente</button>
+        }
+      </div>
+    }
+    @case ('success') {
+      @if (viewState().message; as message) {
+        <p class="state-message state-message--success" role="status">{{ message }}</p>
+      }
+    }
+  }
+
+  <form class="profile-form" novalidate (submit)="submitProfile($event)">
+    <fieldset>
+      <legend>Contexto essencial</legend>
+      <div class="form-grid">
+        <div class="field-group">
+          <label for="profile-primary-niche">Nicho principal <span aria-hidden="true">*</span></label>
+          <input
+            id="profile-primary-niche"
+            type="text"
+            autocomplete="off"
+            [formField]="profileForm.primaryNiche"
+            [attr.aria-invalid]="profileForm.primaryNiche().invalid()"
+            aria-describedby="profile-primary-niche-errors"
+          />
+          <div id="profile-primary-niche-errors" class="field-errors" aria-live="polite">
+            @if (profileForm.primaryNiche().touched()) {
+              @for (error of profileForm.primaryNiche().errors(); track error.kind + $index) {
+                <p>{{ error.message }}</p>
+              }
+            }
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label for="profile-language">Idioma <span aria-hidden="true">*</span></label>
+          <input
+            id="profile-language"
+            type="text"
+            autocomplete="language"
+            [formField]="profileForm.language"
+            [attr.aria-invalid]="profileForm.language().invalid()"
+            aria-describedby="profile-language-errors"
+          />
+          <div id="profile-language-errors" class="field-errors" aria-live="polite">
+            @if (profileForm.language().touched()) {
+              @for (error of profileForm.language().errors(); track error.kind + $index) {
+                <p>{{ error.message }}</p>
+              }
+            }
+          </div>
+        </div>
+
+        <div class="field-group field-group--wide">
+          <label for="profile-target-audience">Público-alvo <span aria-hidden="true">*</span></label>
+          <textarea
+            id="profile-target-audience"
+            rows="3"
+            [formField]="profileForm.targetAudience"
+            [attr.aria-invalid]="profileForm.targetAudience().invalid()"
+            aria-describedby="profile-target-audience-errors"
+          ></textarea>
+          <div id="profile-target-audience-errors" class="field-errors" aria-live="polite">
+            @if (profileForm.targetAudience().touched()) {
+              @for (error of profileForm.targetAudience().errors(); track error.kind + $index) {
+                <p>{{ error.message }}</p>
+              }
+            }
+          </div>
+        </div>
+
+        <div class="field-group field-group--wide">
+          <label for="profile-channel-goals">Objetivos do canal <span aria-hidden="true">*</span></label>
+          <textarea
+            id="profile-channel-goals"
+            rows="4"
+            [formField]="profileForm.channelGoalsText"
+            [attr.aria-invalid]="profileForm.channelGoalsText().invalid()"
+            aria-describedby="profile-channel-goals-help profile-channel-goals-errors"
+          ></textarea>
+          <p id="profile-channel-goals-help" class="field-help">Um objetivo por linha, até 10.</p>
+          <div id="profile-channel-goals-errors" class="field-errors" aria-live="polite">
+            @if (profileForm.channelGoalsText().touched()) {
+              @for (error of profileForm.channelGoalsText().errors(); track error.kind + $index) {
+                <p>{{ error.message }}</p>
+              }
+            }
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Personalização</legend>
+      <div class="form-grid">
+        <div class="field-group">
+          <label for="profile-region">Região</label>
+          <input
+            id="profile-region"
+            type="text"
+            autocomplete="country-name"
+            [formField]="profileForm.targetRegion"
+            [attr.aria-invalid]="profileForm.targetRegion().invalid()"
+            aria-describedby="profile-region-errors"
+          />
+          <div id="profile-region-errors" class="field-errors" aria-live="polite">
+            @if (profileForm.targetRegion().touched()) {
+              @for (error of profileForm.targetRegion().errors(); track error.kind + $index) {
+                <p>{{ error.message }}</p>
+              }
+            }
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label for="profile-experience">Nível de experiência</label>
+          <input
+            id="profile-experience"
+            type="text"
+            [formField]="profileForm.experienceLevel"
+            [attr.aria-invalid]="profileForm.experienceLevel().invalid()"
+            aria-describedby="profile-experience-errors"
+          />
+          <div id="profile-experience-errors" class="field-errors" aria-live="polite">
+            @if (profileForm.experienceLevel().touched()) {
+              @for (error of profileForm.experienceLevel().errors(); track error.kind + $index) {
+                <p>{{ error.message }}</p>
+              }
+            }
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label for="profile-frequency">Frequência de publicação</label>
+          <input
+            id="profile-frequency"
+            type="text"
+            [formField]="profileForm.publicationFrequency"
+            [attr.aria-invalid]="profileForm.publicationFrequency().invalid()"
+            aria-describedby="profile-frequency-errors"
+          />
+          <div id="profile-frequency-errors" class="field-errors" aria-live="polite">
+            @if (profileForm.publicationFrequency().touched()) {
+              @for (error of profileForm.publicationFrequency().errors(); track error.kind + $index) {
+                <p>{{ error.message }}</p>
+              }
+            }
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label for="profile-style">Estilo de comunicação</label>
+          <textarea
+            id="profile-style"
+            rows="3"
+            [formField]="profileForm.communicationStyle"
+            [attr.aria-invalid]="profileForm.communicationStyle().invalid()"
+            aria-describedby="profile-style-errors"
+          ></textarea>
+          <div id="profile-style-errors" class="field-errors" aria-live="polite">
+            @if (profileForm.communicationStyle().touched()) {
+              @for (error of profileForm.communicationStyle().errors(); track error.kind + $index) {
+                <p>{{ error.message }}</p>
+              }
+            }
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label for="profile-sub-niches">Subnichos</label>
+          <textarea
+            id="profile-sub-niches"
+            rows="5"
+            [formField]="profileForm.subNichesText"
+            [attr.aria-invalid]="profileForm.subNichesText().invalid()"
+            aria-describedby="profile-sub-niches-help profile-sub-niches-errors"
+          ></textarea>
+          <p id="profile-sub-niches-help" class="field-help">Um subnicho por linha, até 10.</p>
+          <div id="profile-sub-niches-errors" class="field-errors" aria-live="polite">
+            @if (profileForm.subNichesText().touched()) {
+              @for (error of profileForm.subNichesText().errors(); track error.kind + $index) {
+                <p>{{ error.message }}</p>
+              }
+            }
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label for="profile-preferred-topics">Temas desejados</label>
+          <textarea
+            id="profile-preferred-topics"
+            rows="5"
+            [formField]="profileForm.preferredTopicsText"
+            [attr.aria-invalid]="profileForm.preferredTopicsText().invalid()"
+            aria-describedby="profile-preferred-topics-help profile-preferred-topics-errors"
+          ></textarea>
+          <p id="profile-preferred-topics-help" class="field-help">Um tema por linha, até 20.</p>
+          <div id="profile-preferred-topics-errors" class="field-errors" aria-live="polite">
+            @if (profileForm.preferredTopicsText().touched()) {
+              @for (error of profileForm.preferredTopicsText().errors(); track error.kind + $index) {
+                <p>{{ error.message }}</p>
+              }
+            }
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label for="profile-excluded-topics">Temas excluídos</label>
+          <textarea
+            id="profile-excluded-topics"
+            rows="5"
+            [formField]="profileForm.excludedTopicsText"
+            [attr.aria-invalid]="profileForm.excludedTopicsText().invalid()"
+            aria-describedby="profile-excluded-topics-help profile-excluded-topics-errors"
+          ></textarea>
+          <p id="profile-excluded-topics-help" class="field-help">Um tema por linha, até 20.</p>
+          <div id="profile-excluded-topics-errors" class="field-errors" aria-live="polite">
+            @if (profileForm.excludedTopicsText().touched()) {
+              @for (error of profileForm.excludedTopicsText().errors(); track error.kind + $index) {
+                <p>{{ error.message }}</p>
+              }
+            }
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="profileForm().submitting()">
+        @if (profileForm().submitting()) {
+          Salvando…
+        } @else {
+          Salvar perfil
+        }
+      </button>
+      <a routerLink="/conta">Voltar para a conta</a>
+    </div>
+  </form>
+</section>

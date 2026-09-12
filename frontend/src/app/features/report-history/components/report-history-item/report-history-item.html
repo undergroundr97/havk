@@ -1,0 +1,55 @@
+<article class="history-item" [attr.aria-labelledby]="'report-title-' + report().id">
+  <div class="item-heading">
+    <div>
+      <p class="eyebrow">Relatório gerado</p>
+      <h2 [id]="'report-title-' + report().id">
+        <a [routerLink]="['/relatorios', report().id]">{{ report().title }}</a>
+      </h2>
+    </div>
+    <span class="status" [attr.data-status]="report().status">
+      {{ statusLabel(report().status) }}
+    </span>
+  </div>
+
+  <p class="summary">{{ report().summary }}</p>
+
+  <dl class="metadata">
+    <div>
+      <dt>Plataforma</dt>
+      <dd>{{ report().platformCode }}</dd>
+    </div>
+    <div>
+      <dt>Conta</dt>
+      <dd>{{ report().channelName }}{{ report().platformHandle ? ' · ' + report().platformHandle : '' }}</dd>
+    </div>
+    <div>
+      <dt>Assunto solicitado</dt>
+      <dd>{{ report().requestedTopic ?? 'Não informado' }}</dd>
+    </div>
+    <div><dt>Metodologia</dt><dd>Gancho · Problema · Solução · Diferencial</dd></div>
+    <div><dt>Versão</dt><dd>{{ report().reportVersion ?? 1 }}{{ report().simulated ? ' · Simulado' : '' }}</dd></div>
+    <div>
+      <dt>Gerado em</dt>
+      <dd>
+        <time [attr.datetime]="report().generatedAt">
+          {{ formatDate(report().generatedAt) }}
+        </time>
+      </dd>
+    </div>
+    <div>
+      <dt>Criado em</dt>
+      <dd>
+        <time [attr.datetime]="report().createdAt">
+          {{ formatDate(report().createdAt) }}
+        </time>
+      </dd>
+    </div>
+  </dl>
+
+  <div class="item-actions">
+    <a class="detail-action" [routerLink]="['/relatorios', report().id]">Abrir relatório</a>
+    <button type="button" class="delete-action" (click)="deleteRequested.emit()">
+      Excluir relatório
+    </button>
+  </div>
+</article>

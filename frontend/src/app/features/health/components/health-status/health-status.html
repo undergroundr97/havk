@@ -1,0 +1,34 @@
+<section class="health-card" aria-labelledby="health-title">
+  <div>
+    <p class="eyebrow">Conexão com o backend</p>
+    <h2 id="health-title">Fundação em tempo real</h2>
+  </div>
+
+  <div class="status-region" aria-live="polite">
+    @switch (state()) {
+      @case ('idle') {
+        <p class="status neutral">Aguardando a verificação do serviço.</p>
+      }
+      @case ('loading') {
+        <p class="status loading" role="status">
+          <span class="status-dot" aria-hidden="true"></span>
+          Verificando a disponibilidade do backend…
+        </p>
+      }
+      @case ('success') {
+        @if (health(); as currentHealth) {
+          <p class="status success">
+            <span class="status-dot" aria-hidden="true"></span>
+            Backend disponível — {{ currentHealth.status }}
+          </p>
+        }
+      }
+      @case ('error') {
+        <div class="error-state" role="alert">
+          <p>Não foi possível confirmar a conexão com o backend.</p>
+          <button type="button" (click)="check()">Tentar novamente</button>
+        </div>
+      }
+    }
+  </div>
+</section>

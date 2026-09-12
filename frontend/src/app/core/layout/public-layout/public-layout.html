@@ -1,0 +1,75 @@
+<a class="skip-link" href="#main-content">Ir para o conteúdo principal</a>
+
+<div class="public-layout">
+  <header class="site-header">
+    <div class="layout-container header-content">
+      <a class="brand" routerLink="/" (click)="closeMenu()" aria-label="HAVK, página inicial">
+        HAVK
+      </a>
+
+      <nav
+        id="public-navigation"
+        class="site-navigation"
+        [class.site-navigation--open]="menuOpen()"
+        aria-label="Navegação principal"
+      >
+        <a routerLink="/" fragment="inicio" (click)="closeMenu()">Início</a>
+        <a routerLink="/" fragment="recursos" (click)="closeMenu()">Recursos</a>
+        <a routerLink="/" fragment="como-funciona" (click)="closeMenu()">Como funciona</a>
+        <a routerLink="/" fragment="sobre" (click)="closeMenu()">Sobre</a>
+      </nav>
+
+      <div class="header-actions">
+        <a class="login-link" routerLink="/login">Entrar</a>
+        <a class="header-cta" routerLink="/cadastro">Criar conta</a>
+      </div>
+
+      <button
+        class="menu-toggle"
+        type="button"
+        [attr.aria-expanded]="menuOpen()"
+        aria-controls="public-navigation"
+        [attr.aria-label]="menuOpen() ? 'Fechar menu' : 'Abrir menu'"
+        (click)="toggleMenu()"
+      >
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="main-content" #mainContent tabindex="-1">
+    <router-outlet />
+  </main>
+
+  <footer class="site-footer">
+    <div class="layout-container footer-grid">
+      <div class="footer-brand">
+        <a class="brand" routerLink="/">HAVK</a>
+        <p>Inteligência de conteúdo orientada pelo contexto do seu canal.</p>
+      </div>
+
+      <div class="footer-links">
+        <h2>Produto</h2>
+        <a routerLink="/" fragment="recursos">Recursos</a>
+        <a routerLink="/" fragment="como-funciona">Como funciona</a>
+      </div>
+
+      <div class="footer-links">
+        <h2>HAVK</h2>
+        <a routerLink="/" fragment="sobre">Sobre</a>
+        <a routerLink="/login">Entrar</a>
+      </div>
+
+      <div class="footer-invitation">
+        <h2>Pronto para começar?</h2>
+        <p>Transforme o contexto do seu canal em direção criativa.</p>
+        <a class="header-cta" routerLink="/cadastro">Criar conta</a>
+      </div>
+    </div>
+
+    <div class="layout-container footer-bottom">
+      <span>© 2026 HAVK. Todos os direitos reservados.</span>
+      <span>Inteligência para a próxima grande ideia.</span>
+    </div>
+  </footer>
+</div>

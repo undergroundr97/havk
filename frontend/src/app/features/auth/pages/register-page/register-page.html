@@ -1,0 +1,105 @@
+<section class="auth-page shell" aria-labelledby="register-title">
+  <div class="auth-intro">
+    <p class="eyebrow">Sua jornada começa aqui</p>
+    <h1 id="register-title">Crie sua conta.</h1>
+    <p>Uma identidade segura para construir ideias alinhadas ao seu canal.</p>
+  </div>
+
+  <form class="auth-card" novalidate (submit)="submitRegistration($event)">
+    <button type="button" class="oauth-action" [disabled]="submissionState() === 'loading'" (click)="registerWithYouTube()">
+      Criar conta com YouTube
+    </button>
+    <p class="oauth-hint">O HAVK cria sua conta com o e-mail verificado pelo Google e conecta o canal autorizado.</p>
+    <div class="auth-divider" aria-hidden="true"><span>ou cadastre e-mail e senha</span></div>
+    <div class="field-group">
+      <label for="register-name">Nome</label>
+      <input
+        id="register-name"
+        type="text"
+        autocomplete="name"
+        [formField]="registrationForm.name"
+        [attr.aria-invalid]="registrationForm.name().invalid()"
+        aria-describedby="register-name-errors"
+      />
+      <div id="register-name-errors" class="field-errors" aria-live="polite">
+        @if (registrationForm.name().touched()) {
+          @for (error of registrationForm.name().errors(); track error.kind + $index) {
+            <p>{{ error.message }}</p>
+          }
+        }
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label for="register-email">E-mail</label>
+      <input
+        id="register-email"
+        type="email"
+        autocomplete="email"
+        inputmode="email"
+        [formField]="registrationForm.email"
+        [attr.aria-invalid]="registrationForm.email().invalid()"
+        aria-describedby="register-email-errors"
+      />
+      <div id="register-email-errors" class="field-errors" aria-live="polite">
+        @if (registrationForm.email().touched()) {
+          @for (error of registrationForm.email().errors(); track error.kind + $index) {
+            <p>{{ error.message }}</p>
+          }
+        }
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label for="register-password">Senha</label>
+      <input
+        id="register-password"
+        type="password"
+        autocomplete="new-password"
+        [formField]="registrationForm.password"
+        [attr.aria-invalid]="registrationForm.password().invalid()"
+        aria-describedby="register-password-hint register-password-errors"
+      />
+      <p id="register-password-hint" class="field-hint">Use de 12 a 128 caracteres.</p>
+      <div id="register-password-errors" class="field-errors" aria-live="polite">
+        @if (registrationForm.password().touched()) {
+          @for (error of registrationForm.password().errors(); track error.kind + $index) {
+            <p>{{ error.message }}</p>
+          }
+        }
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label for="register-confirm-password">Confirme a senha</label>
+      <input
+        id="register-confirm-password"
+        type="password"
+        autocomplete="new-password"
+        [formField]="registrationForm.confirmPassword"
+        [attr.aria-invalid]="registrationForm.confirmPassword().invalid()"
+        aria-describedby="register-confirm-password-errors"
+      />
+      <div id="register-confirm-password-errors" class="field-errors" aria-live="polite">
+        @if (registrationForm.confirmPassword().touched()) {
+          @for (error of registrationForm.confirmPassword().errors(); track error.kind + $index) {
+            <p>{{ error.message }}</p>
+          }
+        }
+      </div>
+    </div>
+
+    @if (submissionMessage(); as message) {
+      <p class="form-message form-message--error" role="alert">{{ message }}</p>
+    }
+
+    <button type="submit" [disabled]="registrationForm().submitting()">
+      @if (registrationForm().submitting()) {
+        Criando conta…
+      } @else {
+        Criar conta
+      }
+    </button>
+    <p class="auth-switch">Já tem uma conta? <a routerLink="/login">Entre</a>.</p>
+  </form>
+</section>

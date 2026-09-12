@@ -1,0 +1,470 @@
+/* Premium authenticated theme. Component styles keep layout ownership; this layer
+   centralizes the shared visual language and removes legacy light-theme islands. */
+.authenticated-layout {
+  color-scheme: dark;
+  --color-surface: var(--havk-bg);
+  --color-surface-raised: var(--havk-surface);
+  --color-ink: var(--havk-text);
+  --color-muted: var(--havk-text-secondary);
+  --color-line: var(--havk-border);
+  --color-accent: var(--havk-primary);
+  --color-accent-strong: var(--havk-primary-subtle);
+  --color-accent-soft: var(--havk-primary-subtle);
+  --color-warning: var(--havk-warning);
+  background:
+    radial-gradient(circle at 82% -10%, rgb(255 122 0 / 7%), transparent 30rem),
+    var(--havk-bg);
+  color: var(--havk-text);
+  font-size: var(--havk-text-base);
+  line-height: var(--havk-leading-body);
+}
+
+.authenticated-layout > main {
+  background: transparent;
+}
+
+.authenticated-layout :where(
+  .dashboard-page,
+  .trends-page,
+  .platform-accounts,
+  .content-memory,
+  .report-history,
+  .report-detail,
+  .profile-page,
+  .review-page,
+  .channel-page,
+  .channel-summary
+) {
+  color: var(--havk-text) !important;
+}
+
+.authenticated-layout :where(h1, h2, h3, h4, strong, legend, label, dt, dd) {
+  text-wrap: balance;
+}
+
+.authenticated-layout :where(h1, h2, h3, h4) {
+  color: var(--havk-text);
+}
+
+.authenticated-layout :where(p, li, dd, small, span) {
+  text-wrap: pretty;
+}
+
+.authenticated-layout :where(a, button, input, textarea, select, summary) {
+  transition:
+    color var(--havk-transition),
+    background-color var(--havk-transition),
+    border-color var(--havk-transition),
+    box-shadow var(--havk-transition),
+    opacity var(--havk-transition),
+    transform var(--havk-transition);
+}
+
+.authenticated-layout :where(a, button) {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.authenticated-layout :where(button):not(:disabled):active,
+.authenticated-layout :where(a[class*='action']):active {
+  transform: translateY(1px) scale(0.985);
+}
+
+.authenticated-layout :where(button:disabled, [aria-disabled='true']) {
+  cursor: not-allowed;
+  filter: saturate(0.45);
+  opacity: 0.5;
+}
+
+.authenticated-layout :where(input, textarea, select) {
+  border-color: var(--havk-border-strong) !important;
+  border-radius: var(--havk-radius-sm) !important;
+  background: var(--havk-surface-raised) !important;
+  color: var(--havk-text) !important;
+  caret-color: var(--havk-primary);
+}
+
+.authenticated-layout :where(input, textarea, select)::placeholder {
+  color: var(--havk-text-muted);
+  opacity: 1;
+}
+
+.authenticated-layout :where(input, textarea, select):hover:not(:disabled) {
+  border-color: #747474 !important;
+}
+
+.authenticated-layout :where(input, textarea, select):focus-visible {
+  border-color: var(--havk-primary) !important;
+  outline: 0 !important;
+  box-shadow: 0 0 0 3px var(--havk-focus-ring) !important;
+}
+
+.authenticated-layout :where(input, textarea, select)[aria-invalid='true'] {
+  border-color: var(--havk-danger) !important;
+}
+
+.authenticated-layout :where(.eyebrow) {
+  color: var(--havk-primary-subtle) !important;
+}
+
+.authenticated-layout :where(.field-error, .field-errors, .state--error) {
+  color: #ff9a9a !important;
+}
+
+.authenticated-layout :where(.primary-action, .submit-button, .form-actions button:last-child) {
+  border-color: var(--havk-primary) !important;
+  background: var(--havk-primary) !important;
+  color: #1a120b !important;
+  box-shadow: 0 8px 20px rgb(255 122 0 / 14%);
+}
+
+.authenticated-layout app-trends-page :where(.search-form button, .results-heading button, .actions button),
+.authenticated-layout app-platform-accounts-page :where(.form-actions button),
+.authenticated-layout app-content-memory-page :where(.form-actions button:last-child) {
+  border: 1px solid var(--havk-primary) !important;
+  background: var(--havk-primary) !important;
+  color: #1a120b !important;
+  box-shadow: 0 8px 20px rgb(255 122 0 / 14%);
+}
+
+.authenticated-layout app-trends-page :where(.search-form button, .results-heading button, .actions button):hover:not(:disabled),
+.authenticated-layout app-platform-accounts-page :where(.form-actions button):hover:not(:disabled),
+.authenticated-layout app-content-memory-page :where(.form-actions button:last-child):hover:not(:disabled) {
+  border-color: var(--havk-primary-hover) !important;
+  background: var(--havk-primary-hover) !important;
+  transform: translateY(-1px);
+}
+
+.authenticated-layout :where(.primary-action, .submit-button, .form-actions button:last-child):hover:not(:disabled) {
+  border-color: var(--havk-primary-hover) !important;
+  background: var(--havk-primary-hover) !important;
+  box-shadow: 0 10px 26px rgb(255 122 0 / 22%);
+  transform: translateY(-1px);
+}
+
+.authenticated-layout :where(.secondary-action, .secondary-button, .back-action) {
+  border-color: var(--havk-border) !important;
+  background: var(--havk-surface-raised) !important;
+  color: var(--havk-text) !important;
+}
+
+.authenticated-layout :where(.secondary-action, .secondary-button, .back-action):hover:not(:disabled) {
+  border-color: var(--havk-border-strong) !important;
+  background: var(--havk-surface-hover) !important;
+}
+
+.authenticated-layout :where(.delete-action, .danger-action, .danger) {
+  border-color: color-mix(in srgb, var(--havk-danger) 62%, var(--havk-border)) !important;
+  background: transparent !important;
+  color: var(--havk-danger) !important;
+}
+
+.authenticated-layout :where(.delete-action, .danger-action, .danger):hover:not(:disabled) {
+  background: var(--havk-danger-soft) !important;
+}
+
+.authenticated-layout :where(.state-card, .notice, .current-account, .transcript-panel) {
+  border-color: var(--havk-border) !important;
+  background: var(--havk-surface) !important;
+  color: var(--havk-text);
+  box-shadow: var(--havk-shadow-sm);
+}
+
+.authenticated-layout :where(.state-card--error, .state-message--error, .conflict) {
+  border-color: color-mix(in srgb, var(--havk-danger) 65%, var(--havk-border)) !important;
+  background: var(--havk-danger-soft) !important;
+  color: var(--havk-text) !important;
+}
+
+.authenticated-layout :where(.state-message--success) {
+  border-color: var(--havk-success) !important;
+  background: var(--havk-success-soft) !important;
+  color: var(--havk-text) !important;
+}
+
+.authenticated-layout :where(.partial, .partial-notice, .coverage, .confirmation, .archive-confirm, .integration-note) {
+  border-color: color-mix(in srgb, var(--havk-warning) 58%, var(--havk-border)) !important;
+  background: var(--havk-warning-soft) !important;
+  color: var(--havk-text) !important;
+}
+
+.authenticated-layout :where(.simulated-badge, .simulation-notice) {
+  border-color: color-mix(in srgb, var(--havk-warning) 58%, var(--havk-border)) !important;
+  background: var(--havk-warning-soft) !important;
+  color: #ffd88d !important;
+}
+
+/* Authenticated feature surfaces */
+.authenticated-layout :where(
+  .journey-panel,
+  .summary-panel,
+  .recent-reports,
+  .quick-actions,
+  .youtube-summary,
+  .channel-health,
+  .health-card,
+  .account-card,
+  .account-form,
+  .account-selector,
+  .search-form,
+  .trend-card,
+  .content-card,
+  .review-card,
+  .connection-card,
+  .channel-card,
+  .history-item,
+  .structured-section,
+  .report-metadata > div,
+  .idea-card,
+  .source-list,
+  .source,
+  fieldset
+) {
+  border-color: var(--havk-border) !important;
+  border-radius: var(--havk-radius-lg) !important;
+  background: var(--havk-surface) !important;
+  color: var(--havk-text);
+  box-shadow: var(--havk-shadow-sm);
+}
+
+.authenticated-layout :where(.idea-context > div, .story-blocks li, .idea-list li) {
+  border-color: var(--havk-border) !important;
+  background: var(--havk-surface-raised) !important;
+  color: var(--havk-text-secondary) !important;
+}
+
+.authenticated-layout :where(.story-blocks li) {
+  border-inline-start-color: var(--havk-primary) !important;
+}
+
+.authenticated-layout :where(
+  .journey-panel,
+  .summary-panel,
+  .recent-reports,
+  .quick-actions,
+  .youtube-summary,
+  .channel-health,
+  .account-card,
+  .trend-card,
+  .content-card,
+  .history-item,
+  .structured-section
+):hover {
+  border-color: var(--havk-border-strong) !important;
+  box-shadow: var(--havk-shadow-md);
+}
+
+.authenticated-layout :where(
+  .report-list li,
+  .youtube-metrics > div,
+  .health-state,
+  .channel-details > div,
+  .analysis,
+  .analysis li,
+  .badges > *,
+  .keywords li
+) {
+  border-color: var(--havk-border) !important;
+  background: var(--havk-surface-raised) !important;
+  color: var(--havk-text-secondary) !important;
+}
+
+.authenticated-layout :where(.quick-actions a, .history button, .actions a, .actions button) {
+  border-color: var(--havk-border) !important;
+  background: transparent !important;
+  color: var(--havk-text) !important;
+}
+
+.authenticated-layout :where(.quick-actions a, .history button, .actions a, .actions button):hover:not(:disabled) {
+  border-color: var(--havk-primary) !important;
+  background: var(--havk-surface-hover) !important;
+}
+
+.authenticated-layout :where(.account-state, .section-heading > span, .step-state, .confidence, .status) {
+  border: 1px solid var(--havk-border) !important;
+  background: var(--havk-surface-raised) !important;
+  color: var(--havk-text-secondary) !important;
+}
+
+.authenticated-layout :where(.status[data-status='COMPLETED']) {
+  border-color: var(--havk-success) !important;
+  color: #8ce5b2 !important;
+}
+
+.authenticated-layout :where(.status[data-status='FAILED']) {
+  border-color: var(--havk-danger) !important;
+  color: #ff9a9a !important;
+}
+
+.authenticated-layout :where(.recommended-action) {
+  border: 1px solid color-mix(in srgb, var(--havk-primary) 34%, var(--havk-border));
+  background:
+    radial-gradient(circle at 100% 0, rgb(255 122 0 / 18%), transparent 24rem),
+    var(--havk-surface) !important;
+  color: var(--havk-text) !important;
+  box-shadow: var(--havk-shadow-lg) !important;
+}
+
+.authenticated-layout :where(.recommended-action p:not(.eyebrow)) {
+  color: var(--havk-text-secondary) !important;
+}
+
+.authenticated-layout :where(.active-request) {
+  border-color: color-mix(in srgb, var(--havk-warning) 55%, var(--havk-border)) !important;
+  background: var(--havk-warning-soft) !important;
+}
+
+.authenticated-layout :where(.request-status) {
+  background: var(--havk-warning) !important;
+  box-shadow: 0 0 0 0.35rem rgb(245 184 75 / 15%) !important;
+}
+
+.authenticated-layout :where(.loading-mark) {
+  border-color: var(--havk-border) !important;
+  border-top-color: var(--havk-primary) !important;
+}
+
+.authenticated-layout :where(.dashboard-loading, .workspace-state) {
+  position: relative;
+  overflow: hidden;
+}
+
+.authenticated-layout :where(.dashboard-loading, .workspace-state)::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 20%, rgb(255 255 255 / 4%) 50%, transparent 80%);
+  content: '';
+  translate: -100% 0;
+  animation: havk-loading-sheen 1.8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.authenticated-layout :where(.trend-card.selected) {
+  outline-color: var(--havk-primary) !important;
+  box-shadow: 0 0 0 4px var(--havk-focus-ring), var(--havk-shadow-md) !important;
+}
+
+.authenticated-layout app-platform-accounts-page :where(.account-card dt, .capabilities),
+.authenticated-layout app-platform-account-selector :where(p),
+.authenticated-layout app-trends-page :where(dt, .collected),
+.authenticated-layout app-content-memory-page :where(.published, .description, .analysis-pending) {
+  color: var(--havk-text-secondary) !important;
+}
+
+.authenticated-layout app-report-delete-dialog :where(.dialog-backdrop) {
+  background: rgb(8 8 8 / 76%) !important;
+  backdrop-filter: blur(6px);
+}
+
+.authenticated-layout app-report-delete-dialog :where(.delete-dialog) {
+  border-color: color-mix(in srgb, var(--havk-danger) 65%, var(--havk-border)) !important;
+  background: var(--havk-surface-elevated) !important;
+  color: var(--havk-text);
+  box-shadow: var(--havk-shadow-lg) !important;
+}
+
+.authenticated-layout app-report-delete-dialog :where(.dialog-error) {
+  border-color: var(--havk-danger) !important;
+  background: var(--havk-danger-soft) !important;
+}
+
+.authenticated-layout app-report-delete-dialog :where(.destructive-action) {
+  border-color: var(--havk-danger) !important;
+  background: var(--havk-danger) !important;
+  color: #211010 !important;
+}
+
+.authenticated-layout app-workspace-page :where(.conversation-main) {
+  border-radius: var(--havk-radius-xl) !important;
+  box-shadow: var(--havk-shadow-sm) !important;
+}
+
+.authenticated-layout app-workspace-page :where(.composer) {
+  border-radius: var(--havk-radius-lg) !important;
+  background: color-mix(in srgb, var(--havk-surface) 94%, transparent) !important;
+  box-shadow: var(--havk-shadow-md) !important;
+  backdrop-filter: blur(18px);
+}
+
+.authenticated-layout app-workspace-page :where(
+  .sidebar-heading button,
+  .report-actions button,
+  .report-actions a,
+  .confirmation button,
+  .conversation-toggle
+):hover:not(:disabled) {
+  border-color: var(--havk-primary) !important;
+  background: var(--havk-surface-hover) !important;
+}
+
+.authenticated-layout :where(.deletion-announcement) {
+  border-color: var(--havk-success) !important;
+  background: var(--havk-success-soft) !important;
+  color: #a0e8bd !important;
+}
+
+.authenticated-layout :where([tabindex='-1']):focus-visible {
+  border-radius: 0.25rem;
+  outline: 2px solid var(--havk-focus) !important;
+  outline-offset: 0.35rem;
+}
+
+@media (max-width: 48rem) {
+  .authenticated-layout :where(.shell) {
+    width: min(100% - 1.25rem, 76rem);
+  }
+
+  .authenticated-layout :where(.dashboard-page, .trends-page) {
+    padding-inline: 0.75rem !important;
+  }
+
+  .authenticated-layout :where(.page-action-group > *, .connection-actions > *, .form-actions > *) {
+    min-height: 2.75rem;
+  }
+}
+
+@media (max-width: 23.5rem) {
+  .authenticated-layout :where(.shell) {
+    width: calc(100% - 1rem);
+  }
+
+  .authenticated-layout :where(.dashboard-page, .trends-page, .workspace) {
+    padding-inline: 0.5rem !important;
+  }
+
+  .authenticated-layout :where(.page-action-group, .page-action-group > *, .item-actions, .item-actions > *) {
+    width: 100%;
+  }
+
+  .authenticated-layout app-platform-accounts-page :where(.account-card dl div) {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .authenticated-layout app-platform-accounts-page :where(.account-card dd) {
+    max-width: 100%;
+    text-align: left;
+    overflow-wrap: anywhere;
+  }
+
+  .authenticated-layout :where(.connection-actions, .connection-actions > *, .form-actions, .form-actions > *) {
+    width: 100%;
+  }
+}
+
+@keyframes havk-loading-sheen {
+  60%,
+  100% {
+    translate: 100% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .authenticated-layout :where(a, button, input, textarea, select, summary) {
+    transition: none;
+  }
+
+  .authenticated-layout :where(.dashboard-loading, .workspace-state)::after {
+    animation: none;
+  }
+}

@@ -1,0 +1,246 @@
+<section class="dashboard-page" aria-labelledby="dashboard-title" [attr.aria-busy]="state().status === 'loading'">
+  <app-platform-account-selector (changed)="accountChanged()" />
+  @if (state().status === 'loading' && !data()) {
+    <div class="dashboard-loading" role="status">
+      <span class="loading-mark" aria-hidden="true"></span>
+      <div>
+        <h1 id="dashboard-title">Preparando sua visão geral</h1>
+        <p>Reunindo o estado da sua jornada no HAVK…</p>
+      </div>
+    </div>
+  } @else if (state().status === 'error') {
+    <div class="dashboard-error" role="alert">
+      <p class="eyebrow">Visão geral indisponível</p>
+      <h1 id="dashboard-title">Não foi possível carregar seu dashboard.</h1>
+      <p>{{ state().message }}</p>
+      @if (state().canRetry) {
+        <button type="button" (click)="retry()">Tentar novamente</button>
+      }
+    </div>
+  } @else if (data(); as dashboard) {
+    <header class="dashboard-header">
+      <div>
+        <p class="eyebrow">Sua visão geral</p>
+        <h1 id="dashboard-title">
+          @if (dashboard.user.name; as name) {
+            Olá, {{ name }}
+          } @else {
+            Olá
+          }
+        </h1>
+        <p>Veja o estado atual da sua jornada no HAVK e avance com clareza.</p>
+      </div>
+      <span class="account-state">Conta ativa</span>
+    </header>
+
+    @if (state().status === 'partial') {
+      <div class="partial-notice" role="status">
+        <p>{{ state().message }}</p>
+        <button type="button" (click)="retry()">Atualizar dados</button>
+      </div>
+    }
+
+    <section class="recommended-action" aria-labelledby="recommended-title">
+      <div>
+        <p class="eyebrow">Próxima ação recomendada</p>
+        <h2 id="recommended-title">{{ dashboard.recommendedAction.title }}</h2>
+        <p>{{ dashboard.recommendedAction.description }}</p>
+      </div>
+      <a class="primary-action" [routerLink]="actionLink(dashboard.recommendedAction.target)">Continuar</a>
+    </section>
+
+    @if (dashboard.profileReview; as profileReview) {
+      <section class="profile-review-notice" aria-labelledby="profile-review-title">
+        <div>
+          <p class="eyebrow">Perfil do criador</p>
+          <h2 id="profile-review-title">
+            @switch (profileReview.status) {
+              @case ('CONFIRMED') { Perfil revisado }
+              @case ('PARTIALLY_CONFIRMED') { Revisão em andamento }
+              @case ('MANUAL') { Perfil manual disponível }
+              @default { Perfil automático disponível }
+            }
+          </h2>
+          @if (profileReview.status === 'PARTIALLY_CONFIRMED') {
+            <p>{{ profileReview.remainingRequiredFields }} campos obrigatórios ainda precisam de confirmação.</p>
+          } @else if (profileReview.hasNewSuggestions) {
+            <p>Há novas sugestões para comparar. Seus valores confirmados continuam ativos.</p>
+          } @else if (profileReview.status === 'CONFIRMED') {
+            <p>Todos os campos obrigatórios foram confirmados.</p>
+          } @else {
+            <p>Revise as estimativas do YouTube e escolha o contexto que o HAVK deve usar.</p>
+          }
+        </div>
+        <a [routerLink]="profileReview.target">{{ profileReview.status === 'CONFIRMED' ? 'Revisar' : 'Revisar perfil' }}</a>
+      </section>
+    }
+
+    @if (dashboard.youtube; as youtube) {
+      <section class="youtube-summary" aria-labelledby="youtube-summary-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Canal conectado</p>
+            <h2 id="youtube-summary-title">Resumo do YouTube</h2>
+          </div>
+          @if (youtube.simulated) { <strong class="simulated-badge">SIMULATED · Dados simulados</strong> }
+        </div>
+        @if (youtube.synchronizationStatus === 'COMPLETED' || youtube.synchronizationStatus === 'INSUFFICIENT_DATA') {
+          <dl class="youtube-metrics">
+            <div><dt>Inscritos</dt><dd>{{ formatNumber(youtube.subscriberCount) }}</dd></div>
+            <div><dt>Visualizações do canal</dt><dd>{{ formatNumber(youtube.channelViewCount) }}</dd></div>
+            <div><dt>Vídeos</dt><dd>{{ formatNumber(youtube.channelVideoCount) }}</dd></div>
+            <div><dt>Visualizações no período</dt><dd>{{ formatNumber(youtube.periodViews) }}</dd></div>
+            <div><dt>Minutos assistidos</dt><dd>{{ formatNumber(youtube.estimatedMinutesWatched) }}</dd></div>
+            <div><dt>Novos inscritos</dt><dd>{{ formatNumber(youtube.subscribersGained) }}</dd></div>
+          </dl>
+          @if (youtube.lastSynchronizedAt; as date) { <p>Atualizado em {{ formatDate(date) }}.</p> }
+          @if (youtube.limitations; as limitations) { <p role="status">Limitações: {{ limitations }}</p> }
+        } @else if (youtube.synchronizationStatus === 'REAUTHORIZATION_REQUIRED') {
+          <p role="alert">A autorização expirou ou foi revogada. Reconecte o canal para atualizar as métricas.</p>
+        } @else if (youtube.synchronizationStatus === 'FAILED') {
+          <p role="status">A última coleta falhou com segurança. Tente novamente pela área do canal.</p>
+        } @else {
+          <p>Conecte e atualize o canal para exibir métricas normalizadas.</p>
+        }
+        <a routerLink="/canal">Gerenciar coleta</a>
+      </section>
+    }
+
+    <app-channel-health-grid [health]="dashboard.channelHealth" />
+
+    <div class="dashboard-grid">
+      <section class="journey-panel" aria-labelledby="journey-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Progresso</p>
+            <h2 id="journey-title">Sua jornada</h2>
+          </div>
+          <span>{{ dashboard.onboarding.firstReportGenerated ? '4 de 4 etapas' : 'Em andamento' }}</span>
+        </div>
+        <ol class="journey-list">
+          @for (step of journey(); track step.label) {
+            <li [class.is-complete]="step.complete">
+              <span class="step-mark" aria-hidden="true">{{ step.complete ? '✓' : $index + 1 }}</span>
+              <div>
+                <h3>{{ step.label }}</h3>
+                <p>{{ step.guidance }}</p>
+                @if (step.target) {
+                  <a [routerLink]="step.target">{{ step.complete ? 'Revisar' : 'Concluir etapa' }}</a>
+                }
+              </div>
+              <span class="step-state">{{ step.complete ? 'Concluída' : 'Pendente' }}</span>
+            </li>
+          }
+        </ol>
+      </section>
+
+      <aside class="summary-panel" aria-labelledby="summary-title">
+        <p class="eyebrow">Resumo real</p>
+        <h2 id="summary-title">Seu HAVK hoje</h2>
+        <dl>
+          <div>
+            <dt>Relatórios</dt>
+            <dd>{{ dashboard.reports.totalReports }}</dd>
+          </div>
+          <div>
+            <dt>Ideias geradas</dt>
+            <dd>{{ dashboard.reports.totalIdeas }}</dd>
+          </div>
+          <div>
+            <dt>Perfil</dt>
+            <dd>{{ dashboard.onboarding.profileConfigured ? 'Configurado' : 'Não configurado' }}</dd>
+          </div>
+          <div>
+            <dt>Canal</dt>
+            <dd>{{ dashboard.onboarding.channelRegistered ? 'Cadastrado' : 'Não cadastrado' }}</dd>
+          </div>
+          @if (dashboard.reports.lastGeneratedAt; as lastGeneratedAt) {
+            <div>
+              <dt>Último relatório</dt>
+              <dd>{{ formatDate(lastGeneratedAt) }}</dd>
+            </div>
+          }
+        </dl>
+      </aside>
+    </div>
+
+    @if (dashboard.activeRequest; as request) {
+      <section class="active-request" aria-labelledby="active-request-title">
+        <div class="request-status" aria-hidden="true"></div>
+        <div>
+          <p class="eyebrow">Processamento em segundo plano</p>
+          <h2 id="active-request-title">{{ requestStatus(request) }}</h2>
+          <p>
+            @if (request.requestedTopic; as topic) {
+              Estamos preparando ideias sobre “{{ topic }}”.
+            } @else {
+              Estamos preparando novas ideias para o seu canal.
+            }
+            Você pode sair desta página sem interromper o trabalho.
+          </p>
+        </div>
+        <a [routerLink]="actionLink(dashboard.recommendedAction.type === 'FOLLOW_ACTIVE_REQUEST' ? dashboard.recommendedAction.target : '/relatorios/novo')">
+          Acompanhar solicitação
+        </a>
+      </section>
+    }
+
+    <section class="recent-reports" aria-labelledby="recent-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Biblioteca recente</p>
+          <h2 id="recent-title">Relatórios recentes</h2>
+        </div>
+        @if (dashboard.reports.totalReports > 0) {
+          <a routerLink="/relatorios">Ver todos os relatórios</a>
+        }
+      </div>
+      @if (dashboard.recentReports; as reports) {
+        @if (reports.length > 0) {
+          <ul class="report-list">
+            @for (report of reports; track report.id) {
+              <li>
+                <div>
+                  <span>{{ formatDate(report.generatedAt) }}</span>
+                  <span>{{ report.channelName }}</span>
+                </div>
+                <h3><a [routerLink]="['/relatorios', report.id]">{{ report.title }}</a></h3>
+                <p>{{ report.requestedTopic ?? 'Ideias orientadas pelo perfil do canal' }}</p>
+                <strong>{{ report.requestedIdeaCount }} {{ report.requestedIdeaCount === 1 ? 'ideia' : 'ideias' }}</strong>
+              </li>
+            }
+          </ul>
+        } @else {
+          <div class="empty-reports">
+            <h3>Você ainda não possui relatórios.</h3>
+            <p>Quando perfil e canal estiverem prontos, gere o primeiro conjunto de ideias.</p>
+            <a routerLink="/relatorios/novo">Gerar conteúdo</a>
+          </div>
+        }
+      } @else {
+        <div class="unavailable-section" role="status">
+          <p>Os relatórios recentes estão temporariamente indisponíveis.</p>
+        </div>
+      }
+    </section>
+
+    <section class="quick-actions" aria-labelledby="quick-actions-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Atalhos contextuais</p>
+          <h2 id="quick-actions-title">Continue de onde faz sentido</h2>
+        </div>
+      </div>
+      <ul>
+        @for (action of quickActions(); track action.target) {
+          <li>
+            <a [routerLink]="action.target">
+              <strong>{{ action.label }}</strong>
+              <span>{{ action.description }}</span>
+            </a>
+          </li>
+        }
+      </ul>
+    </section>
+  }
+</section>

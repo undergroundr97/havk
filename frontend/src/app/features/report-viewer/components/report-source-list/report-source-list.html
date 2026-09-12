@@ -1,0 +1,58 @@
+<ol class="source-list">
+  @for (source of sources(); track source.id) {
+    <li>
+      <article class="source" [attr.aria-label]="'Fonte: ' + source.title">
+        <div class="source__heading">
+          <span>{{ source.sourceType }}</span>
+          <strong>{{ source.sourceName }}</strong>
+        </div>
+        <p><strong>Atribuição:</strong> {{ source.attributionType ?? 'SOURCE_FACT' }}</p>
+        <p class="source__title">{{ source.title }}</p>
+
+        <dl>
+          @if (source.publisher) {
+            <div>
+              <dt>Publicador</dt>
+              <dd>{{ source.publisher }}</dd>
+            </div>
+          }
+          @if (source.sourceReliability) {
+            <div><dt>Confiabilidade</dt><dd>{{ source.sourceReliability }}</dd></div>
+          }
+          @if (source.publishedAt) {
+            <div>
+              <dt>Publicado em</dt>
+              <dd>{{ formatDate(source.publishedAt) }}</dd>
+            </div>
+          }
+          <div>
+            <dt>Coletado em</dt>
+            <dd>{{ formatDate(source.collectedAt) }}</dd>
+          </div>
+        </dl>
+
+        <div class="source__reference">
+          <span>Referência</span>
+          @if (isHttpReference(source.reference)) {
+            <a
+              [href]="source.reference"
+              target="_blank"
+              rel="noopener noreferrer"
+              [attr.aria-label]="'Abrir referência de ' + source.title + ' em uma nova aba'"
+            >
+              {{ source.reference }}
+            </a>
+          } @else {
+            <p>{{ source.reference }}</p>
+          }
+        </div>
+        @if ((source.evidence?.length ?? 0) > 0) {
+          <div>
+            <strong>Evidências relacionadas</strong>
+            <ul>@for (evidence of source.evidence ?? []; track evidence) { <li>{{ evidence }}</li> }</ul>
+          </div>
+        }
+      </article>
+    </li>
+  }
+</ol>

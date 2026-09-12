@@ -1,0 +1,71 @@
+<section class="trends-page" aria-labelledby="trends-title" [attr.aria-busy]="status() === 'loading'">
+  <header><p class="eyebrow">Pesquisa confiável por nicho</p><h1 id="trends-title">Tendências para a sua conta</h1><p>Descubra sinais de fontes confiáveis ou classifique vídeos públicos já coletados. A classificação é calculada pelo HAVK sem IA.</p></header>
+  <app-platform-account-selector (changed)="accountChanged()" />
+
+  @if (accounts.selected(); as account) {
+    <p class="current-account"><strong>Conta atual:</strong> {{ account.platformName }} · {{ account.displayName }} @if (account.handle) { · {{ account.handle }} }</p>
+    <form novalidate (submit)="search($event)" class="search-form">
+      <div class="wide"><label for="trend-term">Termo de pesquisa</label><input id="trend-term" type="search" [formField]="searchForm.term" placeholder="Ex.: juros, saúde digital, acessibilidade web" /><small>Opcional: o perfil efetivo da conta sempre será considerado.</small></div>
+      <div><label for="trend-period">Período</label><select id="trend-period" [formField]="searchForm.periodDays"><option value="7">7 dias</option><option value="30">30 dias</option><option value="90">90 dias</option><option value="365">12 meses</option></select></div>
+      <div><label for="trend-region">Região</label><input id="trend-region" [formField]="searchForm.region" [placeholder]="account.region || 'BR'" /></div>
+      <div><label for="trend-language">Idioma</label><input id="trend-language" [formField]="searchForm.language" [placeholder]="account.language || 'pt-BR'" /></div>
+      <div><label for="trend-source-type">Tipo de fonte</label><select id="trend-source-type" [formField]="searchForm.sourceType"><option value="">Todas as fontes confiáveis</option><option value="OFFICIAL_GOVERNMENT">Órgão público</option><option value="REGULATORY_AUTHORITY">Autoridade reguladora</option><option value="PRIMARY_INSTITUTION">Instituição primária</option><option value="ACADEMIC">Acadêmica</option><option value="OFFICIAL_VENDOR">Fornecedor oficial</option><option value="REPUTABLE_SPECIALIZED_MEDIA">Especializada</option></select></div>
+      <button type="submit" [disabled]="status() === 'loading'">{{ status() === 'loading' ? 'Pesquisando…' : 'Pesquisar tendências' }}</button>
+      <button type="button" class="rank-snapshots" (click)="rankCollectedSnapshots()" [disabled]="status() === 'loading'">Classificar sinais coletados</button>
+    </form>
+  } @else {
+    <section class="state-card" role="status"><h2>Nenhuma conta selecionada</h2><p>@if (accounts.accounts().length > 1) { Selecione uma das suas contas para manter o contexto isolado. } @else { Cadastre uma conta de plataforma para pesquisar tendências. }</p></section>
+  }
+
+  @if (latestCollection(); as collection) {
+    <section class="collection-summary" aria-labelledby="latest-collection-title">
+      <div><p class="eyebrow">Coleta pública mais recente</p><h2 id="latest-collection-title">{{ collectionStatusLabel(collection) }}</h2></div>
+      <p><strong>{{ collection.provider === 'YOUTUBE' ? 'YouTube real' : 'SIMULATED · Provider simulado' }}</strong> · {{ collectedLabel(collection.observedAt) }}</p>
+      @if (collection.failureMessage) { <p>{{ collection.failureMessage }}</p> }
+      <dl>
+        <div><dt>Vídeos persistidos</dt><dd>{{ collection.videosPersisted }}</dd></div>
+        <div><dt>Canais persistidos</dt><dd>{{ collection.channelsPersisted }}</dd></div>
+        <div><dt>Chamadas externas</dt><dd>{{ collection.searchCalls + collection.videoDetailBatches + collection.channelDetailBatches }}</dd></div>
+        <div><dt>Quota contabilizada</dt><dd>{{ collection.quotaUnits }}</dd></div>
+      </dl>
+    </section>
+  }
+
+  @if (message()) { <p class="notice" [attr.role]="status() === 'error' ? 'alert' : 'status'">{{ message() }}</p> }
+  @if (status() === 'loading') { <div class="state-card" role="status"><h2>{{ loadingMessage() }}</h2><p>O contexto permanece isolado na conta selecionada.</p></div> }
+  @if (status() === 'insufficient-coverage') { <div class="state-card coverage" role="status"><h2>Cobertura insuficiente</h2><p>Cobertura insuficiente de fontes confiáveis para este nicho.</p><p>O HAVK não substitui silenciosamente essas fontes por sites genéricos.</p></div> }
+  @if (status() === 'empty') { <div class="state-card" role="status"><h2>Pesquisa sem resultados confiáveis</h2><p>Não encontramos resultados que atendam à política de confiabilidade e relevância.</p></div> }
+  @if (status() === 'error') { <div class="state-card" role="alert"><h2>Pesquisa indisponível</h2><p>Tente novamente sem alterar o contexto da conta.</p></div> }
+
+  @if (current(); as search) {
+    @if (status() === 'partial') { <div class="partial" role="status"><strong>Resultado parcial</strong><span>{{ search.failedSources.length }} fonte(s) indisponível(is).</span>@for (failure of search.failedSources; track failure) { <small>{{ failure }}</small> }</div> }
+    @if (search.results.length > 0) {
+      <p><a class="primary-action" href="/relatorios/novo?strategy=SURPRISE_ME">Gerar relatório com as melhores oportunidades</a></p>
+      <div class="results-heading"><div><p class="eyebrow">Resultado calculado</p><h2>{{ search.results.length }} tendências relevantes</h2></div><button type="button" (click)="saveSelection()" [disabled]="savingSelection()">Salvar seleção ({{ selectedCount() }})</button></div>
+      <div class="trend-grid">
+        @for (result of search.results; track result.id) {
+          <article class="trend-card" [class.selected]="selectedIds().has(result.id)">
+            <div class="badges"><strong>{{ sourceLabel(result) }}</strong><span>{{ result.realData ? 'Dado real' : 'SIMULATED · Dado simulado' }}</span>@if (result.freshnessStatus === 'OUTDATED') { <span>Conteúdo desatualizado</span> }</div>
+            <h3>{{ result.title }}</h3><p>{{ result.factualSummary }}</p>
+            <dl><div><dt>Fonte</dt><dd>{{ result.sourceName }} · {{ result.sourceDomain }}</dd></div><div><dt>Publicação</dt><dd>{{ publishedLabel(result.publishedAt) }}</dd></div><div><dt>Score determinístico</dt><dd>{{ relevanceLabel(result) }} · confiança {{ confidenceLabel(result) }}</dd></div><div><dt>Classificação HAVK</dt><dd>{{ result.relevanceReason }}</dd></div>
+              @if (isNicheRanking(result)) {
+                <div><dt>Evidência pública</dt><dd>{{ factorCount(result, 'distinctVideoCount') }} vídeos · {{ factorCount(result, 'distinctChannelCount') }} canais</dd></div>
+                <div><dt>Repetição editorial</dt><dd>Penalização de {{ factorPercent(result, 'repetitionPenalty') }}%</dd></div>
+              }
+            </dl>
+            @if (!result.additionallyConfirmed) { <p class="confirmation">Não foi possível confirmar em fontes adicionais.</p> }
+            @if (result.conflictingSources) { <p class="conflict"><strong>Fontes divergentes:</strong> consulte as evidências preservadas antes de interpretar.</p> }
+            <details><summary>Evidências e fatores do ranking</summary><ul>@for (evidence of result.evidence; track evidence) { <li>{{ evidence }}</li> }</ul>
+              @if (isNicheRanking(result)) { <p>Componentes: perfil {{ factorPercent(result, 'profileRelevance') }}%, velocidade {{ factorPercent(result, 'publicVelocity') }}%, engajamento {{ factorPercent(result, 'publicEngagement') }}%, recência {{ factorPercent(result, 'recency') }}% e amplitude {{ factorPercent(result, 'adoptionBreadth') }}%.</p> }
+            </details>
+            @if (result.keywords.length) { <ul class="keywords" aria-label="Palavras-chave">@for (keyword of result.keywords; track keyword) { <li>{{ keyword }}</li> }</ul> }
+            <p class="collected">{{ collectedLabel(result.collectedAt) }}</p>
+            <div class="actions"><a [href]="result.originalUrl" target="_blank" rel="noopener noreferrer">Abrir fonte original <span class="sr-only">: {{ result.title }}</span></a><button type="button" [attr.aria-pressed]="selectedIds().has(result.id)" (click)="toggle(result)">{{ selectedIds().has(result.id) ? 'Remover seleção' : 'Selecionar tendência' }}</button></div>
+          </article>
+        }
+      </div>
+    }
+  }
+
+  @if (history().length > 0) { <section class="history" aria-labelledby="history-title"><h2 id="history-title">Histórico desta conta</h2><ul>@for (item of history(); track item.id) { <li><button type="button" (click)="openHistory(item)"><strong>{{ historyLabel(item) }}</strong><span>{{ collectedLabel(item.collectedAt) }} · {{ item.status }}</span></button></li> }</ul></section> }
+</section>

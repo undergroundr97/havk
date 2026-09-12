@@ -1,0 +1,6 @@
+.oauth-callback { max-width: 48rem; padding-block: clamp(4rem, 12vw, 9rem); }
+h1 { font-size: clamp(2.5rem, 7vw, 5rem); line-height: 1; }
+p { color: var(--color-muted); line-height: 1.7; }
+nav { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem; }
+a { display: inline-flex; font-weight: 800; }
+.eyebrow { color: var(--color-accent-strong); font-size: .76rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }

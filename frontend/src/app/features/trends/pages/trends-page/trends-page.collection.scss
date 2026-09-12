@@ -1,0 +1,22 @@
+.collection-summary {
+  margin: 1.5rem 0;
+  padding: 1.25rem;
+  border: 1px solid #d8e0ea;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 7px 24px #17212b0a;
+}
+
+.collection-summary h2 { margin: .2rem 0; }
+.collection-summary dl {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: .75rem;
+  margin: 1rem 0 0;
+}
+.collection-summary dl div { padding: .75rem; border-radius: 10px; background: #f8fafc; }
+.collection-summary dt { font-size: .75rem; text-transform: uppercase; letter-spacing: .06em; color: #526272; }
+.collection-summary dd { margin: .25rem 0 0; font-size: 1.15rem; font-weight: 800; }
+
+@media (max-width: 700px) { .collection-summary dl { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 420px) { .collection-summary dl { grid-template-columns: 1fr; } }

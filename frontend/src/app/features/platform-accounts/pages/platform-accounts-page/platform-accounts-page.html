@@ -1,0 +1,64 @@
+<section class="platform-accounts shell" aria-labelledby="accounts-title">
+  <header><p class="eyebrow">Contextos independentes</p><h1 id="accounts-title">Contas de plataforma</h1>
+    <p>Cadastre canais, páginas e perfis sem misturar saúde, perfil ou relatórios.</p></header>
+
+  @if (message()) { <p class="notice" role="status">{{ message() }}</p> }
+  @if (status() === 'loading') { <p class="state" role="status">Carregando contas…</p> }
+  @if (status() === 'error') { <p class="state state--error" role="alert">{{ message() }}</p> }
+
+  <div class="accounts-layout">
+    <div>
+      @if (status() === 'empty') { <div class="state"><h2>Nenhuma conta cadastrada</h2><p>Use o formulário para começar.</p></div> }
+      @if (accounts().length) {
+        <div class="account-grid" aria-label="Contas cadastradas">
+          @for (account of accounts(); track account.id) {
+            <article class="account-card" [class.account-card--archived]="account.archived">
+              <header><span>{{ account.platformName }}</span><strong>{{ account.displayName }}</strong>
+                @if (account.handle) { <small>{{ account.handle }}</small> }</header>
+              <dl><div><dt>Status</dt><dd>{{ account.archived ? 'Arquivada' : account.connectionStatus }}</dd></div>
+                <div><dt>Origem</dt><dd>{{ originLabel(account) }}</dd></div>
+                <div><dt>Perfil</dt><dd>{{ profileLabel(account) }}</dd></div>
+                <div><dt>Saúde</dt><dd>{{ healthLabel(account) }}</dd></div>
+                <div><dt>Última sincronização</dt><dd>{{ dateLabel(account.lastSynchronizedAt) }}</dd></div></dl>
+              <div class="actions">
+                @if (!account.archived) {
+                  <button type="button" (click)="edit(account)">Editar</button>
+                  <a routerLink="/perfil">Perfil</a><a routerLink="/relatorios">Relatórios</a>
+                  @if (account.capabilities.synchronization) { <a routerLink="/canal">Sincronizar</a> }
+                  <button type="button" (click)="requestArchive(account.id)">Arquivar</button>
+                } @else { <a routerLink="/relatorios">Ver histórico</a> }
+              </div>
+              @if (archiveCandidate() === account.id) {
+                <div class="archive-confirm" role="alert"><p>O histórico será preservado e a conta sairá das novas seleções.</p>
+                  <button type="button" (click)="archive(account.id)">Confirmar arquivamento</button>
+                  <button type="button" (click)="cancelArchive()">Cancelar</button></div>
+              }
+            </article>
+          }
+        </div>
+      }
+    </div>
+
+    <form class="account-form" novalidate (submit)="save($event)">
+      <h2>{{ editingId() ? 'Editar conta' : 'Cadastrar manualmente' }}</h2>
+      <label for="platform-code">Plataforma</label>
+      <select id="platform-code" [formField]="accountForm.platformCode">
+        @for (platform of platforms(); track platform.code) { <option [value]="platform.code">{{ platform.displayName }}</option> }
+      </select>
+      @if (selectedDefinition(); as definition) {
+        @if (!definition.oauth) { <p class="integration-note">Integração automática ainda não disponível para esta plataforma.</p> }
+        @if (definition.contentCapabilities.length) { <p class="capabilities">Capacidades possíveis: {{ definition.contentCapabilities.join(', ') }}. Não são recomendações fixas.</p> }
+      }
+      <label for="display-name">Nome</label><input id="display-name" [formField]="accountForm.displayName" />
+      <label for="handle">Handle</label><input id="handle" placeholder="@conta" [formField]="accountForm.handle" />
+      <label for="public-url">URL pública</label><input id="public-url" type="url" [formField]="accountForm.publicUrl" />
+      @if (accountForm.publicUrl().touched()) { @for (error of accountForm.publicUrl().errors(); track error.kind + $index) { <p class="field-error">{{ error.message }}</p> } }
+      <label for="description">Descrição</label><textarea id="description" rows="4" [formField]="accountForm.description"></textarea>
+      <div class="form-row"><div><label for="language">Idioma</label><input id="language" [formField]="accountForm.language" /></div>
+        <div><label for="region">Região</label><input id="region" [formField]="accountForm.region" /></div></div>
+      <label for="initial-niche">Nicho inicial (opcional)</label><input id="initial-niche" [formField]="accountForm.initialNiche" />
+      <div class="form-actions"><button class="primary-action" type="submit" [disabled]="submitting()">{{ submitting() ? 'Salvando…' : 'Salvar conta' }}</button>
+        @if (editingId()) { <button type="button" (click)="cancelEdit()">Cancelar edição</button> }</div>
+    </form>
+  </div>
+</section>

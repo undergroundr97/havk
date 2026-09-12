@@ -1,0 +1,73 @@
+<section class="auth-page shell" aria-labelledby="login-title">
+  <div class="auth-intro">
+    <p class="eyebrow">Bem-vindo de volta</p>
+    <h1 id="login-title">Entre no HAVK.</h1>
+    <p>Retome o contexto do seu canal e continue construindo a próxima ideia.</p>
+  </div>
+
+  <form class="auth-card" novalidate (submit)="submitLogin($event)">
+    @if (registered) {
+      <p class="form-message form-message--success" role="status">
+        Conta criada. Agora entre com seus dados.
+      </p>
+    }
+
+    <button type="button" class="oauth-action" [disabled]="submissionState() === 'loading'" (click)="enterWithYouTube()">
+      Entrar com YouTube
+    </button>
+    <p class="oauth-hint">Use sua identidade Google e autorize somente a leitura do seu canal.</p>
+    <div class="auth-divider" aria-hidden="true"><span>ou use e-mail e senha</span></div>
+
+    <div class="field-group">
+      <label for="login-email">E-mail</label>
+      <input
+        id="login-email"
+        type="email"
+        autocomplete="email"
+        inputmode="email"
+        [formField]="loginForm.email"
+        [attr.aria-invalid]="loginForm.email().invalid()"
+        aria-describedby="login-email-errors"
+      />
+      <div id="login-email-errors" class="field-errors" aria-live="polite">
+        @if (loginForm.email().touched()) {
+          @for (error of loginForm.email().errors(); track error.kind + $index) {
+            <p>{{ error.message }}</p>
+          }
+        }
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label for="login-password">Senha</label>
+      <input
+        id="login-password"
+        type="password"
+        autocomplete="current-password"
+        [formField]="loginForm.password"
+        [attr.aria-invalid]="loginForm.password().invalid()"
+        aria-describedby="login-password-errors"
+      />
+      <div id="login-password-errors" class="field-errors" aria-live="polite">
+        @if (loginForm.password().touched()) {
+          @for (error of loginForm.password().errors(); track error.kind + $index) {
+            <p>{{ error.message }}</p>
+          }
+        }
+      </div>
+    </div>
+
+    @if (submissionMessage(); as message) {
+      <p class="form-message form-message--error" role="alert">{{ message }}</p>
+    }
+
+    <button type="submit" [disabled]="loginForm().submitting()">
+      @if (loginForm().submitting()) {
+        Entrando…
+      } @else {
+        Entrar
+      }
+    </button>
+    <p class="auth-switch">Ainda não tem conta? <a routerLink="/cadastro">Cadastre-se</a>.</p>
+  </form>
+</section>

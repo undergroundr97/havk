@@ -1,0 +1,226 @@
+<section class="channel-page shell" aria-labelledby="channel-title">
+  <header class="channel-heading">
+    <div>
+      <p class="eyebrow">Canal do YouTube</p>
+      <h1 id="channel-title">
+        @if (mode() === 'create') {
+          Cadastre seu canal
+        } @else {
+          Edite seu canal
+        }
+      </h1>
+      <p>
+        Esses dados serão usados para contextualizar seus próximos relatórios e ideias de vídeo.
+      </p>
+    </div>
+    <div class="platform-badge" aria-label="Plataforma selecionada: YouTube">YouTube</div>
+  </header>
+
+  <aside class="sync-notice" aria-label="Informação sobre sincronização">
+    A sincronização automática com o YouTube ainda não está ativa. Nesta fase, os dados são
+    informados e atualizados manualmente por você.
+  </aside>
+
+  @switch (viewState().status) {
+    @case ('loading') {
+      <p class="state-message" role="status">{{ viewState().message }}</p>
+    }
+    @case ('empty') {
+      <div class="state-message" role="status">
+        <p>{{ viewState().message }}</p>
+        @if (mode() === 'edit') {
+          <a routerLink="/canal/novo">Cadastrar canal</a>
+        }
+      </div>
+    }
+    @case ('success') {
+      @if (viewState().message) {
+        <p class="state-message state-message--success" role="status">
+          {{ viewState().message }}
+        </p>
+      }
+    }
+    @case ('error') {
+      <div class="state-message state-message--error" role="alert">
+        <p>{{ viewState().message }}</p>
+        @if (viewState().canRetryLoad) {
+          <button class="secondary-button" type="button" (click)="retryLoad()">
+            Tentar novamente
+          </button>
+        }
+      </div>
+    }
+  }
+
+  <form class="channel-form" novalidate (submit)="submitChannel($event)">
+    <fieldset>
+      <legend>Informações públicas</legend>
+      <div class="form-grid">
+        <div class="field-group">
+          <label for="channel-name">Nome do canal <span aria-hidden="true">*</span></label>
+          <input
+            id="channel-name"
+            type="text"
+            autocomplete="organization"
+            [formField]="channelForm.name"
+            [attr.aria-invalid]="channelForm.name().touched() && channelForm.name().invalid()"
+            aria-describedby="channel-name-errors"
+          />
+          <div id="channel-name-errors" class="field-errors" aria-live="polite">
+            @if (channelForm.name().touched()) {
+              @for (error of channelForm.name().errors(); track error.kind + $index) {
+                <p>{{ error.message }}</p>
+              }
+            }
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label for="channel-url">URL do canal <span aria-hidden="true">*</span></label>
+          <input
+            id="channel-url"
+            type="url"
+            inputmode="url"
+            autocomplete="url"
+            placeholder="https://www.youtube.com/@seucanal"
+            [formField]="channelForm.url"
+            [attr.aria-invalid]="channelForm.url().touched() && channelForm.url().invalid()"
+            aria-describedby="channel-url-help channel-url-errors"
+          />
+          <p id="channel-url-help" class="field-help">Use a URL pública completa do canal.</p>
+          <div id="channel-url-errors" class="field-errors" aria-live="polite">
+            @if (channelForm.url().touched()) {
+              @for (error of channelForm.url().errors(); track error.kind + $index) {
+                <p>{{ error.message }}</p>
+              }
+            }
+          </div>
+        </div>
+
+        <div class="field-group field-group--wide">
+          <label for="channel-description">Descrição</label>
+          <textarea
+            id="channel-description"
+            rows="5"
+            [formField]="channelForm.description"
+            [attr.aria-invalid]="
+              channelForm.description().touched() && channelForm.description().invalid()
+            "
+            aria-describedby="channel-description-help channel-description-errors"
+          ></textarea>
+          <p id="channel-description-help" class="field-help">Até 2000 caracteres.</p>
+          <div id="channel-description-errors" class="field-errors" aria-live="polite">
+            @if (channelForm.description().touched()) {
+              @for (error of channelForm.description().errors(); track error.kind + $index) {
+                <p>{{ error.message }}</p>
+              }
+            }
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label for="channel-category">Categoria <span aria-hidden="true">*</span></label>
+          <input
+            id="channel-category"
+            type="text"
+            [formField]="channelForm.mainCategory"
+            [attr.aria-invalid]="
+              channelForm.mainCategory().touched() && channelForm.mainCategory().invalid()
+            "
+            aria-describedby="channel-category-errors"
+          />
+          <div id="channel-category-errors" class="field-errors" aria-live="polite">
+            @if (channelForm.mainCategory().touched()) {
+              @for (error of channelForm.mainCategory().errors(); track error.kind + $index) {
+                <p>{{ error.message }}</p>
+              }
+            }
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label for="channel-language">Idioma <span aria-hidden="true">*</span></label>
+          <input
+            id="channel-language"
+            type="text"
+            autocomplete="language"
+            [formField]="channelForm.language"
+            [attr.aria-invalid]="
+              channelForm.language().touched() && channelForm.language().invalid()
+            "
+            aria-describedby="channel-language-errors"
+          />
+          <div id="channel-language-errors" class="field-errors" aria-live="polite">
+            @if (channelForm.language().touched()) {
+              @for (error of channelForm.language().errors(); track error.kind + $index) {
+                <p>{{ error.message }}</p>
+              }
+            }
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Contexto adicional</legend>
+      <div class="form-grid">
+        <div class="field-group">
+          <label for="channel-external-id">Identificador público</label>
+          <input
+            id="channel-external-id"
+            type="text"
+            placeholder="Ex.: UC..."
+            [formField]="channelForm.externalIdentifier"
+            [attr.aria-invalid]="
+              channelForm.externalIdentifier().touched() && channelForm.externalIdentifier().invalid()
+            "
+            aria-describedby="channel-external-id-help channel-external-id-errors"
+          />
+          <p id="channel-external-id-help" class="field-help">Opcional. Não consultamos o YouTube.</p>
+          <div id="channel-external-id-errors" class="field-errors" aria-live="polite">
+            @if (channelForm.externalIdentifier().touched()) {
+              @for (error of channelForm.externalIdentifier().errors(); track error.kind + $index) {
+                <p>{{ error.message }}</p>
+              }
+            }
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label for="channel-size">Tamanho aproximado</label>
+          <input
+            id="channel-size"
+            type="text"
+            inputmode="numeric"
+            placeholder="Ex.: 1200"
+            [formField]="channelForm.approximateSize"
+            [attr.aria-invalid]="
+              channelForm.approximateSize().touched() && channelForm.approximateSize().invalid()
+            "
+            aria-describedby="channel-size-help channel-size-errors"
+          />
+          <p id="channel-size-help" class="field-help">Número aproximado de inscritos, sem pontuação.</p>
+          <div id="channel-size-errors" class="field-errors" aria-live="polite">
+            @if (channelForm.approximateSize().touched()) {
+              @for (error of channelForm.approximateSize().errors(); track error.kind + $index) {
+                <p>{{ error.message }}</p>
+              }
+            }
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+    <p class="required-note"><span aria-hidden="true">*</span> Campos obrigatórios.</p>
+    <div class="form-actions">
+      <button type="submit" [disabled]="channelForm().submitting()">
+        @if (channelForm().submitting()) {
+          Salvando…
+        } @else {
+          Salvar canal
+        }
+      </button>
+      <a routerLink="/canal">Voltar para o resumo</a>
+    </div>
+  </form>
+</section>

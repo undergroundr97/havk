@@ -1,0 +1,11 @@
+<section class="oauth-callback shell" aria-labelledby="oauth-callback-title">
+  <p class="eyebrow">Conexão segura</p>
+  <h1 id="oauth-callback-title">{{ failed() ? 'Autorização não concluída' : 'Conectando seu canal' }}</h1>
+  <p [attr.role]="failed() ? 'alert' : 'status'">{{ message() }}</p>
+  @if (failed()) {
+    <nav aria-label="Opções após falha na autorização">
+      <a [routerLink]="retryUrl()">Tentar novamente</a>
+      <a routerLink="/">Voltar para a página inicial</a>
+    </nav>
+  }
+</section>

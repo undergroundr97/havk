@@ -1,0 +1,50 @@
+<section class="channel-health" aria-labelledby="channel-health-title">
+  <header class="health-heading">
+    <div>
+      <p class="eyebrow">Leitura histórica</p>
+      <h2 id="channel-health-title">Saúde do canal</h2>
+      <p>Indicadores calculados somente com os snapshots persistidos do YouTube.</p>
+    </div>
+    @if (health().simulated) {
+      <strong class="simulated-badge">SIMULATED · Dados simulados</strong>
+    }
+  </header>
+
+  @switch (health().status) {
+    @case ('EMPTY') {
+      <div class="health-state" role="status">
+        <strong>Ainda não há dados para analisar.</strong>
+        <p>Conclua uma sincronização do YouTube para gerar esta visão.</p>
+      </div>
+    }
+    @case ('ERROR') {
+      <div class="health-state health-error" role="alert">
+        <strong>Não foi possível calcular a saúde do canal.</strong>
+        <p>Os demais dados do dashboard continuam disponíveis. Tente atualizar a página.</p>
+      </div>
+    }
+    @default {
+      <div class="health-grid">
+        @for (card of cards(); track card.key) {
+          <article class="health-card" [class.is-insufficient]="card.insight.insufficientData">
+            <p class="card-title">{{ card.title }}</p>
+            @if (card.insight.insufficientData) {
+              <strong class="card-value">Dados insuficientes</strong>
+            } @else {
+              <strong class="card-value">{{ card.insight.value }}</strong>
+            }
+            <p class="card-explanation">{{ card.insight.explanation }}</p>
+            @if (!card.insight.insufficientData) {
+              <p class="confidence">
+                {{ confidenceLabel(card.insight.confidence.level) }}
+                <span>({{ card.insight.confidence.score * 100 | number: '1.0-0' }}%)</span>
+              </p>
+            }
+            <p class="criterion"><span>Critério:</span> {{ card.insight.criterion }}</p>
+          </article>
+        }
+      </div>
+    }
+  }
+</section>
+

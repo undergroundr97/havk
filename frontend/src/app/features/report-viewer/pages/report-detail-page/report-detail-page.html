@@ -1,0 +1,366 @@
+<section
+  class="report-detail shell"
+  aria-labelledby="report-page-title"
+  [attr.aria-busy]="state().status === 'loading'"
+>
+  <nav class="page-actions" aria-label="Ações do relatório">
+    <a class="back-action" routerLink="/relatorios">Voltar ao histórico</a>
+    <div class="page-action-group">
+      <a class="primary-action" routerLink="/workspace">Abrir workspace</a>
+      @if (report()) {
+        <button
+          type="button"
+          class="primary-action"
+          [disabled]="regenerationState() === 'submitting'"
+          (click)="regenerate()"
+        >
+          {{ regenerationState() === 'submitting' ? 'Criando nova versão…' : 'Regenerar relatório' }}
+        </button>
+        <button
+          type="button"
+          class="delete-action"
+          [disabled]="deletionState().status === 'deleting'"
+          (click)="beginDelete()"
+        >
+          Excluir relatório
+        </button>
+      }
+    </div>
+  </nav>
+
+  @if (deletionAnnouncement(); as message) {
+    <p class="deletion-announcement" role="status" aria-live="polite">{{ message }}</p>
+  }
+  @if (regenerationError(); as message) {
+    <p class="deletion-announcement" role="alert">{{ message }}</p>
+  }
+
+  @switch (state().status) {
+    @case ('idle') {
+      <div class="state-card">
+        <h1 id="report-page-title" #pageHeading tabindex="-1">Preparando relatório</h1>
+        <p role="status" aria-live="polite">Preparando a visualização…</p>
+      </div>
+    }
+    @case ('loading') {
+      <div class="state-card">
+        <p class="eyebrow">Relatório HAVK</p>
+        <h1 id="report-page-title" #pageHeading tabindex="-1">Carregando relatório</h1>
+        <p role="status" aria-live="polite">Buscando ideias, tendências e fontes…</p>
+      </div>
+    }
+    @case ('error') {
+      @if (error(); as currentError) {
+        <div class="state-card state-card--error" role="alert">
+          <p class="eyebrow">Não foi possível abrir</p>
+          <h1 id="report-page-title" #pageHeading tabindex="-1">
+            @if (isError('not-found')) {
+              Relatório não encontrado
+            } @else if (isError('forbidden')) {
+              Acesso não permitido
+            } @else if (isError('session')) {
+              Sessão inválida
+            } @else {
+              Erro ao carregar relatório
+            }
+          </h1>
+          <p>{{ currentError.message }}</p>
+          @if (currentError.canRetry) {
+            <button type="button" class="primary-action" (click)="retry()">Tentar novamente</button>
+          }
+        </div>
+      }
+    }
+    @default {
+      @if (report(); as currentReport) {
+        <article class="report">
+          <header class="report-header">
+            <p class="eyebrow">Relatório completo</p>
+            <h1 id="report-page-title" #pageHeading tabindex="-1">{{ currentReport.title }}</h1>
+            <p class="report-summary">{{ currentReport.summary }}</p>
+            @if (currentReport.simulated) {
+              <p class="simulation-notice" role="note">{{ currentReport.generationNotice }}</p>
+            }
+
+            @if (isScriptV3()) {
+              <section class="script-overview" aria-label="Resumo do roteiro falado">
+                <div class="script-overview__primary">
+                  <span class="script-overview__label">Formato recomendado</span>
+                  <strong>{{ formatName(currentReport.recommendedFormat) }}</strong>
+                  <p>{{ currentReport.formatDecision?.reason }}</p>
+                  @if (currentReport.formatDecision?.alternatives?.length) {
+                    <div class="format-alternatives" aria-label="Outros formatos compatíveis">
+                      <span>Outros formatos compatíveis</span>
+                      <ul>
+                        @for (option of currentReport.formatDecision.alternatives; track option.format) {
+                          <li>
+                            {{ formatName(option.format) }}
+                            <small>{{ (option.historicalAffinity * 100).toFixed(0) }}% de afinidade histórica</small>
+                          </li>
+                        }
+                      </ul>
+                    </div>
+                  }
+                </div>
+                <dl class="script-stats">
+                  <div><dt>Duração</dt><dd>{{ currentReport.totalEstimatedDurationLabel }}</dd></div>
+                  <div><dt>Ritmo</dt><dd>{{ currentReport.speakingRateWordsPerMinute }} ppm</dd></div>
+                  <div><dt>Palavras</dt><dd>{{ currentReport.estimatedWordCount }}</dd></div>
+                  <div><dt>Confiança</dt><dd>{{ ((currentReport.formatDecision?.confidence ?? 0) * 100).toFixed(0) }}%</dd></div>
+                </dl>
+              </section>
+            }
+
+            <dl class="report-metadata">
+              <div>
+                <dt>Canal</dt>
+                <dd>{{ currentReport.channelName }}</dd>
+              </div>
+              @if (currentReport.requestedTopic) {
+                <div>
+                  <dt>Assunto solicitado</dt>
+                  <dd>{{ currentReport.requestedTopic }}</dd>
+                </div>
+              }
+              <div>
+                <dt>Objetivo</dt>
+                <dd>{{ currentReport.objective }}</dd>
+              </div>
+              <div>
+                <dt>Metodologia</dt>
+                <dd>Gancho · Problema · Solução · Diferencial</dd>
+              </div>
+              <div>
+                <dt>Versão</dt>
+                <dd>{{ currentReport.reportVersion ?? 1 }}</dd>
+              </div>
+              <div>
+                <dt>Suficiência do contexto</dt>
+                <dd>{{ currentReport.contextSufficiency }} · {{ ((currentReport.contextConfidence ?? 0) * 100).toFixed(0) }}%</dd>
+              </div>
+              @if (currentReport.dataCollectedAt) {
+                <div>
+                  <dt>Coleta concluída em</dt>
+                  <dd>{{ formatDate(currentReport.dataCollectedAt) }}</dd>
+                </div>
+              }
+              <div>
+                <dt>Gerado em</dt>
+                <dd>{{ formatDate(currentReport.generatedAt) }}</dd>
+              </div>
+              <div>
+                <dt>Criado em</dt>
+                <dd>{{ formatDate(currentReport.createdAt) }}</dd>
+              </div>
+            </dl>
+          </header>
+
+          @if (currentReport.generationContext; as generationContext) {
+            <section class="report-context" aria-labelledby="generation-origin-title">
+              <div class="section-heading">
+                <p class="eyebrow">Proveniência contextual</p>
+                <h2 id="generation-origin-title">Como estas ideias foram selecionadas</h2>
+              </div>
+              <p><strong>{{ generationContext.contextSummary }}</strong></p>
+              <p role="note">{{ generationContext.limitations }}</p>
+              <dl class="report-metadata">
+                <div><dt>Estratégia</dt><dd>{{ generationContext.generationStrategy }}</dd></div>
+                <div><dt>Origem efetiva</dt><dd>{{ generationContext.sourceMode }}</dd></div>
+                <div><dt>Contexto capturado em</dt><dd>{{ formatDate(generationContext.capturedAt) }}</dd></div>
+                <div><dt>Ideias</dt><dd>{{ generationContext.effectiveIdeaCount }}</dd></div>
+              </dl>
+              @if (generationContext.opportunities.length > 0) {
+                <ol class="structured-section-list">
+                  @for (opportunity of generationContext.opportunities; track opportunity.contextId) {
+                    <li><article class="structured-section">
+                      <h3>{{ opportunity.displayTopic }}</h3>
+                      <p>Score editorial {{ (opportunity.rankingScore * 100).toFixed(0) }}% · confiança {{ opportunity.confidence }}</p>
+                      <p>{{ opportunity.explanation }}</p>
+                      <details><summary>{{ opportunity.evidences.length }} evidência(s) pública(s)</summary>
+                        <ul>@for (evidence of opportunity.evidences; track evidence.externalVideoId) {
+                          <li><a [href]="evidence.publicUrl" target="_blank" rel="noopener noreferrer">{{ evidence.title }}</a>
+                            @if (evidence.publicChannelName) { · {{ evidence.publicChannelName }} }</li>
+                        }</ul>
+                      </details>
+                    </article></li>
+                  }
+                </ol>
+              }
+            </section>
+          }
+
+          <section class="report-context" aria-labelledby="report-context-title">
+            <div class="section-heading">
+              <p class="eyebrow">Snapshot imutável</p>
+              <h2 id="report-context-title">Contexto utilizado</h2>
+            </div>
+            <dl class="report-metadata">
+              <div><dt>Nicho principal</dt><dd>{{ currentReport.primaryNiche ?? 'Não disponível' }}</dd></div>
+              <div><dt>Público-alvo</dt><dd>{{ currentReport.targetAudience ?? 'Não disponível' }}</dd></div>
+              <div><dt>Idioma</dt><dd>{{ currentReport.language ?? 'Não disponível' }}</dd></div>
+              <div><dt>Região</dt><dd>{{ currentReport.region ?? 'Não disponível' }}</dd></div>
+              <div><dt>Formato recomendado</dt><dd>{{ currentReport.recommendedFormat ?? 'Dados insuficientes para recomendar um formato.' }}</dd></div>
+            </dl>
+            @if (currentReport.formatDecision?.limitations?.length) {
+              <div class="format-limitations" role="note">
+                <strong>Limitações da decisão</strong>
+                <ul>
+                  @for (limitation of currentReport.formatDecision.limitations; track limitation) {
+                    <li>{{ limitation }}</li>
+                  }
+                </ul>
+              </div>
+            }
+          </section>
+
+          @if (structuredSections().length > 0) {
+            <section class="structured-report" aria-labelledby="structured-report-title">
+              <div class="section-heading">
+                <p class="eyebrow">Corpo do relatório</p>
+                <h2 id="structured-report-title">Estrutura narrativa do roteiro</h2>
+              </div>
+              <ol class="structured-section-list">
+                @for (section of structuredSections(); track section.key) {
+                  <li>
+                    <article class="structured-section">
+                      <header class="script-section-heading">
+                        <div>
+                          <span class="section-index">0{{ $index + 1 }}</span>
+                          <h3>{{ sectionTitle(section.key) }}</h3>
+                        </div>
+                        @if (section.estimatedSpeechSeconds) {
+                          <p class="timeline-badge">
+                            {{ timelineLabel(section.startSecond, section.endSecond) }}
+                            <span>{{ section.estimatedSpeechSeconds }} segundos</span>
+                          </p>
+                        }
+                      </header>
+                      @if (section.spokenScript) {
+                        <div class="spoken-script">
+                          <span>Texto para falar</span>
+                          <p>{{ section.spokenScript }}</p>
+                        </div>
+                        @if (section.transitionToNextSection) {
+                          <div class="spoken-transition">
+                            <span>Transição</span>
+                            <p>{{ section.transitionToNextSection }}</p>
+                          </div>
+                        }
+                        @if (section.deliveryNotes) {
+                          <p class="delivery-note"><strong>Direção de fala:</strong> {{ section.deliveryNotes }}</p>
+                        }
+                      } @else {
+                        <p class="section-content">{{ section.content }}</p>
+                      }
+                      <details class="editorial-details">
+                        <summary>Detalhes editoriais</summary>
+                        <dl>
+                        @if (section.purpose) { <div><dt>Objetivo</dt><dd>{{ section.purpose }}</dd></div> }
+                        @if (section.reasoning) { <div><dt>Por que funciona</dt><dd>{{ section.reasoning }}</dd></div> }
+                        @if (section.impact) { <div><dt>Impacto</dt><dd>{{ section.impact }}</dd></div> }
+                        @if (section.context) { <div><dt>Contexto</dt><dd>{{ section.context }}</dd></div> }
+                        @if (section.consequence) { <div><dt>Consequência</dt><dd>{{ section.consequence }}</dd></div> }
+                        @if (section.relationship) { <div><dt>Relação com a conta/tendência</dt><dd>{{ section.relationship }}</dd></div> }
+                        @if (section.expectedOutcome) { <div><dt>Resultado esperado</dt><dd>{{ section.expectedOutcome }}</dd></div> }
+                        </dl>
+                      @if (section.keyPoints.length > 0) {
+                        <h4>Pontos principais</h4>
+                        <ul>@for (point of section.keyPoints; track point) { <li>{{ point }}</li> }</ul>
+                      }
+                      @if (section.variations.length > 0) {
+                        <h4>Variações</h4>
+                        <ul>@for (variation of section.variations; track variation) { <li>{{ variation }}</li> }</ul>
+                      }
+                      @if (section.evidence.length > 0) {
+                        <h4>Evidências e atribuição</h4>
+                        <ul>@for (evidence of section.evidence; track evidence) { <li>{{ evidence }}</li> }</ul>
+                      }
+                      @if ((section.structuredEvidence?.length ?? 0) > 0) {
+                        <h4>Evidências rastreáveis</h4>
+                        <ul class="evidence-list">
+                          @for (evidence of section.structuredEvidence ?? []; track evidence.type + evidence.claim) {
+                            <li><span>{{ evidenceTypeLabel(evidence.type) }}</span>{{ evidence.claim }}</li>
+                          }
+                        </ul>
+                      }
+                      </details>
+                    </article>
+                  </li>
+                }
+              </ol>
+            </section>
+          }
+
+          @if (traceableTrends().length > 0) {
+            <section class="report-trends" aria-labelledby="report-trends-title">
+              <div class="section-heading"><p class="eyebrow">Rastreabilidade</p><h2 id="report-trends-title">Tendências utilizadas</h2></div>
+              <ol class="structured-section-list">
+                @for (trend of traceableTrends(); track trend.trendResultId) {
+                  <li><article class="structured-section">
+                    <h3>{{ trend.title }}</h3>
+                    <p>{{ trend.factualSummary }}</p>
+                    <p><strong>Fonte:</strong> {{ trend.sourceName }} · {{ trend.sourceReliability }}</p>
+                    <a [href]="trend.originalUrl" target="_blank" rel="noopener noreferrer">Abrir fonte original</a>
+                  </article></li>
+                }
+              </ol>
+            </section>
+          }
+
+          <section class="ideas-section" aria-labelledby="report-ideas-title">
+            <div class="section-heading">
+              <p class="eyebrow">Recomendações acionáveis</p>
+              <h2 id="report-ideas-title">Ideias do relatório</h2>
+            </div>
+
+            @if (state().status === 'empty') {
+              <div class="empty-card" role="status">
+                <h3>Nenhuma ideia disponível</h3>
+                <p>O relatório foi carregado, mas não contém ideias válidas para apresentar.</p>
+                <a class="primary-action" routerLink="/workspace"> Gerar outro relatório </a>
+              </div>
+            } @else {
+              <ol class="idea-list">
+                @for (
+                  presentation of ideaPresentations();
+                  track presentation.idea.id;
+                  let index = $index
+                ) {
+                  <li>
+                    <app-report-idea-card
+                      [idea]="presentation.idea"
+                      [displayNumber]="index + 1"
+                      [sources]="presentation.sources"
+                    />
+                  </li>
+                }
+              </ol>
+            }
+          </section>
+
+          <section class="general-sources" aria-labelledby="general-sources-title">
+            <div class="section-heading">
+              <p class="eyebrow">Referências do relatório</p>
+              <h2 id="general-sources-title">Fontes gerais</h2>
+            </div>
+            @if (generalSources().length > 0) {
+              <app-report-source-list [sources]="generalSources()" />
+            } @else {
+              <p class="empty-inline">Não há fontes gerais disponíveis neste relatório.</p>
+            }
+          </section>
+        </article>
+      }
+    }
+  }
+
+  <app-report-delete-dialog
+    [open]="selectedReportForDeletion() !== null"
+    [reportTitle]="selectedReportForDeletion()?.title ?? ''"
+    [deleting]="deletionState().status === 'deleting'"
+    [errorMessage]="deletionError()?.message ?? null"
+    [canRetry]="deletionError()?.canRetry ?? true"
+    (cancelled)="cancelDelete()"
+    (confirmed)="confirmDelete()"
+  />
+</section>

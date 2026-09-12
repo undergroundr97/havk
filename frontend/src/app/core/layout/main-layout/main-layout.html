@@ -1,0 +1,146 @@
+<a class="skip-link" href="#main-content">Ir para o conteúdo principal</a>
+
+<div class="authenticated-layout">
+  <header class="mobile-header">
+    <a class="brand" routerLink="/dashboard" aria-label="HAVK, ir para o dashboard">
+      <span class="brand-mark" aria-hidden="true">H</span>
+      <span>HAVK</span>
+    </a>
+    <button
+      #menuButton
+      class="menu-button"
+      type="button"
+      aria-controls="authenticated-navigation"
+      [attr.aria-expanded]="menuOpen()"
+      [attr.aria-label]="menuOpen() ? 'Fechar menu' : 'Abrir menu'"
+      (click)="menuOpen() ? closeMenu() : openMenu()"
+    >
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </button>
+  </header>
+
+  @if (menuOpen()) {
+    <button class="drawer-backdrop" type="button" aria-label="Fechar menu" (click)="closeMenu()"></button>
+  }
+
+  <aside
+    #drawer
+    id="authenticated-navigation"
+    class="sidebar"
+    [class.is-open]="menuOpen()"
+    [attr.role]="menuOpen() ? 'dialog' : null"
+    [attr.aria-modal]="menuOpen() ? 'true' : null"
+    [attr.aria-label]="menuOpen() ? 'Menu principal' : null"
+    (keydown)="handleDrawerKeydown($event)"
+  >
+    <a class="brand sidebar-brand" routerLink="/dashboard"
+      aria-label="HAVK, ir para o dashboard" (click)="closeMenuForNavigation()">
+      <span class="brand-mark" aria-hidden="true">H</span>
+      <span>HAVK</span>
+    </a>
+
+    <nav aria-label="Navegação autenticada">
+      <p>Espaço de criação</p>
+      <a routerLink="/dashboard" routerLinkActive="is-active"
+        [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page"
+        (click)="closeMenuForNavigation()">
+        <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13h6V4H4v9Zm0 7h6v-4H4v4Zm10 0h6v-9h-6v9Zm0-16v4h6V4h-6Z"/></svg>
+        <span>Visão geral</span>
+      </a>
+      <a routerLink="/workspace" [class.is-active]="generationCurrent()"
+        [attr.aria-current]="generationCurrent() ? 'page' : null"
+        (click)="closeMenuForNavigation()">
+        <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m4 17.25-.75 3.5 3.5-.75L18.8 7.95l-2.75-2.75L4 17.25ZM20.7 6.05a1 1 0 0 0 0-1.4l-1.35-1.35a1 1 0 0 0-1.4 0l-1.1 1.1 2.75 2.75 1.1-1.1Z"/></svg>
+        <span>Workspace editorial</span>
+      </a>
+      <a routerLink="/contas-de-plataforma" routerLinkActive="is-active"
+        ariaCurrentWhenActive="page" (click)="closeMenuForNavigation()">
+        <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h14v10H7V7Zm-4 3h2v7a2 2 0 0 0 2 2h11v2H7a4 4 0 0 1-4-4v-7Zm8.5 2A2.5 2.5 0 1 0 14 9.5 2.5 2.5 0 0 0 11.5 12Zm-2.8 3.5h6.6a4 4 0 0 0-6.6 0Z"/></svg>
+        <span>Contas de plataforma</span>
+      </a>
+      <a routerLink="/perfil" [class.is-active]="profileCurrent()"
+        [attr.aria-current]="profileCurrent() ? 'page' : null"
+        (click)="closeMenuForNavigation()">
+        <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 8a7 7 0 0 1 14 0H5Z"/></svg>
+        <span>Perfil</span>
+      </a>
+      <a routerLink="/tendencias" routerLinkActive="is-active"
+        ariaCurrentWhenActive="page" (click)="closeMenuForNavigation()">
+        <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18h16v2H4v-2Zm1-3 4.5-5 3 3L18 6.5V10h2V3h-7v2h3.6l-4.2 5-3-3L3.5 13.5 5 15Z"/></svg>
+        <span>Tendências</span>
+      </a>
+      <a routerLink="/memoria-de-conteudo" routerLinkActive="is-active"
+        ariaCurrentWhenActive="page" (click)="closeMenuForNavigation()">
+        <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11a3 3 0 0 1 3 3v13H7a4 4 0 0 1-4-4V6a2 2 0 0 1 2-2Zm2 14h10v-2H7a2 2 0 1 0 0 4v-2Zm1-10h7v2H8V8Z"/></svg>
+        <span>Memória de conteúdo</span>
+      </a>
+      <div class="reports-nav-group">
+        <a
+          class="reports-history-link"
+          routerLink="/relatorios"
+          [class.is-active]="reportsCurrent()"
+          [attr.aria-current]="reportsCurrent() ? 'page' : null"
+          (click)="closeMenuForNavigation()"
+        >
+          <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm8 2v3h3l-3-3ZM8 12v2h7v-2H8Zm0 4v2h7v-2H8Z"/></svg>
+          <span>Relatórios passados</span>
+        </a>
+
+        <div class="recent-reports" aria-label="Relatórios recentes">
+          @if (recentReportsState().status === 'loading') {
+            <span class="recent-reports-status" role="status" aria-live="polite">
+              {{ recentReportsState().reports.length > 0 ? 'Atualizando relatórios…' : 'Carregando relatórios…' }}
+            </span>
+          }
+
+          @if (recentReportsState().status === 'error') {
+            <div class="recent-reports-feedback">
+              <span role="alert">Não foi possível carregar os relatórios.</span>
+              <button type="button" (click)="reloadRecentReports()">Tentar novamente</button>
+            </div>
+          }
+
+          @if (recentReportsState().reports.length > 0) {
+            <ul class="recent-reports-list" aria-label="Últimos cinco relatórios gerados">
+              @for (report of recentReportsState().reports; track report.id) {
+                <li>
+                  <a
+                    class="recent-report-link"
+                    [routerLink]="['/relatorios', report.id]"
+                    [attr.title]="report.title"
+                    (click)="closeMenuForNavigation()"
+                  >
+                    <span>{{ report.title }}</span>
+                    <time [attr.datetime]="report.generatedAt">{{ formatReportDate(report.generatedAt) }}</time>
+                  </a>
+                </li>
+              }
+            </ul>
+          } @else if (recentReportsState().status === 'empty') {
+            <span class="recent-reports-status">Nenhum relatório gerado.</span>
+          }
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-account">
+      <div class="account-identity">
+        <span class="account-avatar" aria-hidden="true">{{ session.user()?.name?.slice(0, 1) ?? 'U' }}</span>
+        <div>
+          <p>{{ session.user()?.name }}</p>
+          <span>{{ session.user()?.email }}</span>
+        </div>
+      </div>
+      <button type="button" (click)="logout()">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H5v16h5v-2H7V6h3V4Zm4.6 4.6L16 10h-6v2h6l-1.4 1.4 1.4 1.4 3.8-3.8L16 7.2l-1.4 1.4Z"/></svg>
+        <span>Sair da conta</span>
+      </button>
+    </div>
+  </aside>
+
+  <main id="main-content" #mainContent tabindex="-1">
+    <router-outlet />
+  </main>
+</div>

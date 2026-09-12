@@ -1,0 +1,10 @@
+<section class="account-page shell" aria-labelledby="account-title">
+  @if (session.user(); as user) {
+    <p class="eyebrow">Sessão protegida</p>
+    <h1 id="account-title">Olá, {{ user.name }}.</h1>
+    <p class="account-email">{{ user.email }}</p>
+    <p>Sua conta está pronta. Complete seu perfil para personalizar as próximas ideias.</p>
+    <p><a routerLink="/perfil/onboarding">Configurar perfil do criador</a></p>
+    <button type="button" (click)="logout()">Sair com segurança</button>
+  }
+</section>

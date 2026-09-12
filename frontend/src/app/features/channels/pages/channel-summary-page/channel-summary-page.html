@@ -1,0 +1,138 @@
+<section class="channel-summary shell" aria-labelledby="channel-summary-title">
+  <header class="summary-heading">
+    <div>
+      <p class="eyebrow">Seu contexto no HAVK</p>
+      <h1 id="channel-summary-title">Canal</h1>
+      <p>Revise os dados usados para personalizar relatórios e ideias.</p>
+    </div>
+  </header>
+
+  <section class="connection-card" aria-labelledby="youtube-connection-title">
+    <div>
+      <p class="eyebrow">Autorização do provedor</p>
+      <h2 id="youtube-connection-title">Conexão com YouTube</h2>
+      @switch (connection()?.status) {
+        @case ('CONNECTED') { <p>Canal autorizado: <strong>{{ connection()?.channelName }}</strong>.</p> }
+        @case ('REAUTHORIZATION_REQUIRED') { <p role="alert">A autorização expirou ou foi revogada. Reconecte para continuar.</p> }
+        @case ('ERROR') { <p role="alert">A conexão precisa de atenção.</p> }
+        @default { <p>Conecte seu canal com o fluxo seguro do Google. O HAVK nunca envia tokens ao navegador.</p> }
+      }
+    </div>
+    <div class="connection-actions">
+      @if (connection()?.status === 'CONNECTED') {
+        <button type="button" [disabled]="connectionBusy()" (click)="refreshConnection()">Renovar agora</button>
+        <button #disconnectButton type="button" class="danger-action" [disabled]="connectionBusy()" (click)="openDisconnectConfirmation()">Desconectar</button>
+      } @else {
+        <button #connectButton type="button" [disabled]="connectionBusy()" (click)="requestConnection()">
+          {{ connection()?.status === 'REAUTHORIZATION_REQUIRED' ? 'Reconectar YouTube' : 'Conectar canal do YouTube' }}
+        </button>
+      }
+    </div>
+    @if (connectionMessage(); as message) { <p class="connection-message" role="status">{{ message }}</p> }
+    @if (confirmReplacement()) {
+      <div #replacementDialog class="confirmation" role="alertdialog" aria-modal="true" aria-labelledby="replace-title" (keydown)="handleConfirmationKeydown($event, 'replacement')">
+        <h3 id="replace-title">Confirmar identificador do canal</h3>
+        <p>O identificador confirmado pelo YouTube substituirá o identificador manual. Descrição, categoria, idioma, perfil e relatórios serão preservados.</p>
+        <button type="button" (click)="startConnection(true)">Confirmar e conectar</button>
+        <button type="button" class="secondary-action" (click)="closeReplacementConfirmation()">Cancelar</button>
+      </div>
+    }
+    @if (confirmDisconnect()) {
+      <div #disconnectDialog class="confirmation" role="alertdialog" aria-modal="true" aria-labelledby="disconnect-title" (keydown)="handleConfirmationKeydown($event, 'disconnect')">
+        <h3 id="disconnect-title">Desconectar o YouTube?</h3>
+        <p>Os tokens serão removidos. Seu canal, perfil e relatórios permanecerão no HAVK.</p>
+        <button type="button" class="danger-action" (click)="disconnect()">Sim, desconectar</button>
+        <button type="button" class="secondary-action" (click)="closeDisconnectConfirmation()">Cancelar</button>
+      </div>
+    }
+  </section>
+
+  <section class="connection-card synchronization-card" aria-labelledby="youtube-sync-title">
+    <div>
+      <p class="eyebrow">Dados do canal</p>
+      <h2 id="youtube-sync-title">Sincronização do YouTube</h2>
+      @if (synchronization(); as sync) {
+        <p>{{ synchronizationMessage(sync) }}</p>
+        @if (sync.simulated) { <strong class="simulated-badge">SIMULATED · Dados simulados</strong> }
+        @if (sync.collectedAt; as collectedAt) { <p>Última coleta: {{ formatDate(collectedAt) }}</p> }
+      } @else { <p>Nenhuma coleta foi realizada. Os snapshots preservam apenas dados normalizados.</p> }
+    </div>
+    <div class="connection-actions">
+      <button type="button" [disabled]="synchronizationBusy() || connection()?.status !== 'CONNECTED'" (click)="synchronize()">
+        {{ synchronizationBusy() ? 'Atualizando…' : 'Atualizar dados do canal' }}
+      </button>
+    </div>
+  </section>
+
+  @switch (viewState().status) {
+    @case ('idle') {
+      <p class="state-card" role="status">{{ viewState().message }}</p>
+    }
+    @case ('loading') {
+      <p class="state-card" role="status">{{ viewState().message }}</p>
+    }
+    @case ('empty') {
+      <div class="state-card state-card--empty" role="status">
+        <h2>Nenhum canal cadastrado</h2>
+        <p>{{ viewState().message }}</p>
+        <a class="primary-action" routerLink="/canal/novo">Cadastrar canal</a>
+      </div>
+    }
+    @case ('error') {
+      <div class="state-card state-card--error" role="alert">
+        <h2>Não foi possível concluir a operação</h2>
+        <p>{{ viewState().message }}</p>
+        <button type="button" (click)="retryLoad()">Tentar carregar novamente</button>
+      </div>
+    }
+    @case ('success') {
+      @if (channel(); as currentChannel) {
+        <article class="channel-card">
+          <div class="channel-card__header">
+            <div>
+              <span class="platform">YouTube</span>
+              <h2>{{ currentChannel.name }}</h2>
+              <p>{{ currentChannel.description || 'Descrição não informada.' }}</p>
+            </div>
+            <a
+              class="external-link"
+              [href]="currentChannel.url"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Abrir canal <span class="sr-only">em uma nova aba</span>
+            </a>
+          </div>
+
+          <dl class="channel-details">
+            <div>
+              <dt>Categoria</dt>
+              <dd>{{ currentChannel.mainCategory }}</dd>
+            </div>
+            <div>
+              <dt>Idioma</dt>
+              <dd>{{ currentChannel.language }}</dd>
+            </div>
+            <div>
+              <dt>Tamanho aproximado</dt>
+              <dd>{{ formatApproximateSize(currentChannel.approximateSize) }}</dd>
+            </div>
+            <div>
+              <dt>Identificador público</dt>
+              <dd>{{ currentChannel.externalIdentifier || 'Não informado' }}</dd>
+            </div>
+          </dl>
+
+          <div class="channel-actions">
+            <a class="primary-action" routerLink="/canal/editar">Editar canal</a>
+            <button type="button" class="danger-action" (click)="deleteChannel()">
+              Excluir canal
+            </button>
+          </div>
+        </article>
+      } @else {
+        <p class="state-card" role="status">{{ viewState().message }}</p>
+      }
+    }
+  }
+</section>

@@ -1,0 +1,121 @@
+<app-platform-account-selector (changed)="accountChanged()" />
+<main class="review-page shell" aria-labelledby="review-title" [attr.aria-busy]="state().status === 'loading' || state().status === 'saving'">
+  <header class="review-header">
+    <div>
+      <p class="eyebrow">Perfil efetivo</p>
+      <h1 id="review-title">Revise seu perfil automático</h1>
+      <p>As sugestões são estimativas baseadas nos snapshots do YouTube. A inferência original será preservada.</p>
+    </div>
+    @if (review(); as data) {
+      <div class="progress" aria-label="Progresso da confirmação">
+        <strong>{{ progress() }}</strong>
+        <span>campos obrigatórios confirmados</span>
+      </div>
+    }
+  </header>
+
+  @switch (state().status) {
+    @case ('loading') { <p class="state" role="status">{{ state().message }}</p> }
+    @case ('saving') { <p class="state" role="status">{{ state().message }}</p> }
+    @case ('empty') {
+      <section class="state state--empty">
+        <p>{{ state().message }}</p>
+        <a routerLink="/canal">Ir para o canal</a>
+      </section>
+    }
+    @case ('error') {
+      <section class="state state--error" role="alert">
+        <p>{{ state().message }}</p>
+        <button type="button" (click)="retry()">Tentar novamente</button>
+      </section>
+    }
+    @case ('success') {
+      @if (state().message) { <p class="state state--success" role="status">{{ state().message }}</p> }
+    }
+  }
+
+  @if (review(); as data) {
+    <section class="review-summary" aria-label="Estado da revisão">
+      <div><span>Estado atual</span><strong>{{ statusLabel(data.status) }}</strong></div>
+      <div><span>Inferência</span><strong>{{ data.inferenceVersion }}</strong></div>
+      @if (data.simulated) { <strong class="simulated">SIMULATED · Dados simulados</strong> }
+      @if (data.hasNewSuggestions) {
+        <p role="status">Há novas sugestões desde sua última revisão. Seus valores atuais foram mantidos.</p>
+      }
+    </section>
+
+    <form novalidate (submit)="save($event)">
+      <div class="field-grid">
+        @for (field of data.fields; track field.name) {
+          <article class="review-card" [class.review-card--new]="field.newSuggestion" [attr.aria-labelledby]="fieldId(field.name) + '-title'">
+            <header>
+              <div>
+                <h2 [id]="fieldId(field.name) + '-title'">{{ field.label }} @if (field.required) { <span aria-label="obrigatório">*</span> }</h2>
+                <p>{{ dataKindLabel(field) }} · Confiança {{ field.confidenceLabel }} ({{ field.confidence * 100 }}%)</p>
+              </div>
+              <span class="field-state">{{ fieldStateLabel(field) }}</span>
+            </header>
+
+            @if (field.newSuggestion) { <p class="new-suggestion">Nova sugestão disponível</p> }
+            @if (field.dataKind === 'INSUFFICIENT') {
+              <p class="insufficient" role="status">Dados insuficientes. {{ field.insufficientReason }}</p>
+            } @else {
+              <div class="suggestion">
+                <strong>Valor sugerido</strong>
+                @if (field.suggestedValues.length > 0) {
+                  <ul>@for (value of field.suggestedValues; track value) { <li>{{ value }}</li> }</ul>
+                } @else { <p>Sem sugestão.</p> }
+                <small>Origem: {{ field.origin }}</small>
+              </div>
+            }
+
+            <div class="editor">
+              <label [for]="fieldId(field.name)">Valor que será usado</label>
+              @switch (field.name) {
+                @case ('PRIMARY_NICHE') { <input [id]="fieldId(field.name)" type="text" [formField]="reviewForm.primaryNiche" (input)="markEdited(field.name)" /> }
+                @case ('SUB_NICHES') { <textarea [id]="fieldId(field.name)" rows="4" [formField]="reviewForm.subNiches" (input)="markEdited(field.name)"></textarea> }
+                @case ('LANGUAGE') { <input [id]="fieldId(field.name)" type="text" [formField]="reviewForm.language" (input)="markEdited(field.name)" /> }
+                @case ('PROBABLE_TARGET_AUDIENCE') { <textarea [id]="fieldId(field.name)" rows="4" [formField]="reviewForm.targetAudience" (input)="markEdited(field.name)"></textarea> }
+                @case ('COMMUNICATION_STYLE') { <textarea [id]="fieldId(field.name)" rows="3" [formField]="reviewForm.communicationStyle" (input)="markEdited(field.name)"></textarea> }
+                @case ('PUBLICATION_FREQUENCY') { <input [id]="fieldId(field.name)" type="text" [formField]="reviewForm.publicationFrequency" (input)="markEdited(field.name)" /> }
+                @case ('PREDOMINANT_TOPICS') { <textarea [id]="fieldId(field.name)" rows="4" [formField]="reviewForm.predominantTopics" (input)="markEdited(field.name)"></textarea> }
+                @case ('BEST_PERFORMING_TOPICS') { <textarea [id]="fieldId(field.name)" rows="4" [formField]="reviewForm.bestPerformingTopics" (input)="markEdited(field.name)"></textarea> }
+                @case ('PROBABLE_CHANNEL_GOALS') { <textarea [id]="fieldId(field.name)" rows="4" [formField]="reviewForm.channelGoals" (input)="markEdited(field.name)"></textarea> }
+              }
+              @if (field.name === 'SUB_NICHES' || field.name === 'PREDOMINANT_TOPICS' || field.name === 'BEST_PERFORMING_TOPICS' || field.name === 'PROBABLE_CHANNEL_GOALS') {
+                <small>Use uma entrada por linha.</small>
+              }
+              <div class="field-errors" aria-live="polite">
+                @for (error of errors(field.name); track error.kind + $index) {
+                  <p>{{ error.message }}</p>
+                }
+              </div>
+            </div>
+
+            <fieldset class="decisions">
+              <legend>Decisão para este campo: <strong>{{ decision(field.name) }}</strong></legend>
+              <button type="button" (click)="choose(field, 'ACCEPT_SUGGESTION')" [disabled]="field.suggestedValues.length === 0">Aceitar sugestão</button>
+              <button type="button" (click)="choose(field, 'REPLACE')">Editar</button>
+              <button type="button" (click)="choose(field, 'KEEP_MANUAL')" [disabled]="field.manualValues.length === 0">Manter valor manual</button>
+              <button type="button" (click)="choose(field, 'IGNORE')">Ignorar</button>
+              <button type="button" (click)="restore(field)" [disabled]="field.suggestedValues.length === 0">Restaurar sugestão</button>
+            </fieldset>
+
+            <details>
+              <summary>Evidências ({{ field.evidence.length }})</summary>
+              @if (field.evidence.length > 0) {
+                <ul>@for (evidence of field.evidence; track evidence.type + evidence.description) {
+                  <li><strong>{{ evidence.type }}</strong>: {{ evidence.description }} @if (evidence.snapshotReference) { <small>{{ evidence.snapshotReference }}</small> }</li>
+                }</ul>
+              } @else { <p>Nenhuma evidência disponível.</p> }
+            </details>
+          </article>
+        }
+      </div>
+      <footer class="form-actions">
+        <a routerLink="/dashboard">Voltar ao dashboard</a>
+        <button type="submit" [disabled]="state().status === 'saving'">Salvar revisão</button>
+      </footer>
+    </form>
+  }
+</main>

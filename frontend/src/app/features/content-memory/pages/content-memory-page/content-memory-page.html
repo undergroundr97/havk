@@ -1,0 +1,78 @@
+<section class="content-memory" aria-labelledby="content-memory-title" [attr.aria-busy]="status() === 'loading'">
+  <header>
+    <p class="eyebrow">Histórico editorial</p>
+    <h1 id="content-memory-title">Memória de conteúdo</h1>
+    <p>O HAVK reutiliza metadados, métricas e textos publicados para evitar sugestões repetitivas. Arquivos de áudio não são enviados nesta fase.</p>
+  </header>
+
+  <app-platform-account-selector (changed)="accountChanged()" />
+
+  @if (accounts.selected(); as account) {
+    <p class="current-account"><strong>Conta atual:</strong> {{ account.platformName }} · {{ account.displayName }}</p>
+  }
+
+  @if (message()) { <p class="notice" role="status">{{ message() }}</p> }
+  @if (status() === 'loading') { <section class="state-card" role="status"><h2>Carregando histórico…</h2><p>Os conteúdos permanecem isolados na conta selecionada.</p></section> }
+  @if (status() === 'no-account') { <section class="state-card" role="status"><h2>Selecione uma conta</h2><p>Escolha uma conta de plataforma para consultar sua memória.</p></section> }
+  @if (status() === 'empty') { <section class="state-card" role="status"><h2>Nenhum conteúdo registrado</h2><p>Sincronize uma plataforma compatível ou aguarde a coleta de metadados.</p></section> }
+  @if (status() === 'error') { <section class="state-card" role="alert"><h2>Memória indisponível</h2><p>Tente novamente sem trocar a conta selecionada.</p></section> }
+
+  @if (status() === 'success') {
+    <div class="results-heading"><div><p class="eyebrow">Acervo desta conta</p><h2>{{ total() }} conteúdo(s)</h2></div></div>
+    <div class="content-grid">
+      @for (content of contents(); track content.id) {
+        <article class="content-card">
+          <div class="badges"><strong>{{ typeLabel(content.contentType) }}</strong><span>{{ content.dataOrigin === 'SIMULATED' ? 'SIMULATED · Dado simulado' : 'Dado da conta' }}</span></div>
+          <h3>{{ content.title }}</h3>
+          @if (content.publishedAt) { <p class="published">Publicado em {{ content.publishedAt | date:'dd/MM/yyyy':'UTC' }}</p> }
+          @if (content.description) { <p class="description">{{ content.description }}</p> }
+
+          <dl>
+            <div><dt>Visualizações</dt><dd>{{ metric(content.latestMetrics?.views ?? null) }}</dd></div>
+            <div><dt>Curtidas</dt><dd>{{ metric(content.latestMetrics?.likes ?? null) }}</dd></div>
+            <div><dt>Comentários</dt><dd>{{ metric(content.latestMetrics?.comments ?? null) }}</dd></div>
+            <div><dt>Compartilhamentos</dt><dd>{{ metric(content.latestMetrics?.shares ?? null) }}</dd></div>
+            <div><dt>Retenção</dt><dd>{{ retention(content.latestMetrics?.retentionRate ?? null) }}</dd></div>
+            <div><dt>Inscritos gerados</dt><dd>{{ metric(content.latestMetrics?.subscribersGained ?? null) }}</dd></div>
+          </dl>
+
+          @if (content.latestAnalysis; as analysis) {
+            <section class="analysis" aria-label="Análise do conteúdo">
+              <div><strong>Análise textual</strong><span>{{ analysis.simulated ? 'Simulada' : analysis.model }}</span></div>
+              <p>{{ analysis.summary }}</p>
+              @if (analysis.topics.length) { <ul aria-label="Temas identificados">@for (topic of analysis.topics; track topic) { <li>{{ topic }}</li> }</ul> }
+            </section>
+          } @else {
+            <p class="analysis-pending">Ainda sem análise semântica. Título e descrição já entram na prevenção de repetição.</p>
+          }
+
+          <div class="actions">
+            @if (content.publicUrl) { <a [href]="content.publicUrl" target="_blank" rel="noopener noreferrer">Abrir publicação</a> }
+            <button type="button" (click)="openTranscript(content)">Adicionar transcrição</button>
+            <button type="button" (click)="analyze(content)" [disabled]="analyzingIds().has(content.id)">
+              {{ analyzingIds().has(content.id) ? 'Analisando…' : 'Analisar texto' }}
+            </button>
+          </div>
+        </article>
+      }
+    </div>
+  }
+
+  @if (activeContent(); as content) {
+    <section class="transcript-panel" aria-labelledby="transcript-title">
+      <div><p class="eyebrow">Texto fornecido pelo criador</p><h2 id="transcript-title">Transcrição de “{{ content.title }}”</h2><p>Cole somente texto. O HAVK não processa nem envia áudio nesta fase.</p></div>
+      <form novalidate (submit)="saveTranscript($event)">
+        <label for="transcript-language">Idioma</label>
+        <input id="transcript-language" [formField]="transcriptForm.language" placeholder="pt-BR" />
+        @if (transcriptForm.language().touched()) { @for (error of transcriptForm.language().errors(); track error.kind + $index) { <small class="field-error">{{ error.message }}</small> } }
+
+        <label for="transcript-text">Transcrição</label>
+        <textarea id="transcript-text" rows="12" [formField]="transcriptForm.transcriptText" [attr.aria-invalid]="transcriptForm.transcriptText().invalid()"></textarea>
+        @if (transcriptForm.transcriptText().touched()) { @for (error of transcriptForm.transcriptText().errors(); track error.kind + $index) { <small class="field-error">{{ error.message }}</small> } }
+
+        <label class="checkbox"><input type="checkbox" [formField]="transcriptForm.partial" /><span>Esta transcrição está incompleta</span></label>
+        <div class="form-actions"><button type="button" (click)="closeTranscript()">Cancelar</button><button type="submit">Salvar transcrição</button></div>
+      </form>
+    </section>
+  }
+</section>

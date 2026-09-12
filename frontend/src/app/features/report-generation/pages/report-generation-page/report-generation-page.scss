@@ -1,0 +1,337 @@
+:host {
+  display: block;
+}
+
+.report-generation {
+  padding-block: clamp(2.5rem, 7vw, 5.5rem);
+}
+
+.page-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.page-heading h1,
+.progress-panel h2 {
+  margin: 0;
+  letter-spacing: -0.04em;
+}
+
+.page-heading h1 {
+  font-size: clamp(2.4rem, 7vw, 4.7rem);
+  line-height: 0.95;
+}
+
+.page-heading p:not(.eyebrow) {
+  max-width: 42rem;
+  color: var(--color-muted);
+  font-size: 1.05rem;
+}
+
+.eyebrow,
+.limit-badge,
+.selected-channel span {
+  color: var(--color-accent-strong);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.limit-badge {
+  border: 1px solid var(--color-accent-soft);
+  border-radius: 999px;
+  padding: 0.65rem 0.9rem;
+  white-space: nowrap;
+}
+
+.generation-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(18rem, 0.85fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.generation-form,
+.progress-panel,
+.state-card {
+  border: 1px solid var(--color-line);
+  border-radius: 1rem;
+  background: var(--color-surface-raised);
+  box-shadow: 0 1.2rem 3rem rgb(25 32 27 / 6%);
+}
+
+.generation-form,
+.progress-panel {
+  min-width: 0;
+  padding: clamp(1.25rem, 4vw, 2rem);
+}
+
+.selected-channel {
+  display: grid;
+  gap: 0.25rem;
+  margin-bottom: 1.75rem;
+  border-left: 0.25rem solid var(--color-accent);
+  padding-left: 1rem;
+}
+
+.selected-channel strong {
+  font-size: 1.2rem;
+}
+
+.selected-channel small,
+.selected-channel a,
+.field-help,
+.progress-placeholder {
+  color: var(--color-muted);
+}
+
+fieldset {
+  display: grid;
+  min-width: 0;
+  gap: 1.15rem;
+  margin: 0 0 1.5rem;
+  border: 0;
+  padding: 0;
+}
+
+.methodology-card small {
+  overflow-wrap: anywhere;
+}
+
+legend {
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  font-weight: 750;
+}
+
+.strategy-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.strategy-card {
+  display: flex;
+  gap: 0.7rem;
+  align-items: flex-start;
+  min-width: 0;
+  border: 1px solid var(--color-line);
+  border-radius: 0.8rem;
+  padding: 1rem;
+  cursor: pointer;
+}
+
+.strategy-card.selected {
+  border-color: var(--color-accent-strong);
+  background: color-mix(in srgb, var(--color-accent) 9%, white);
+}
+
+.strategy-card span {
+  display: grid;
+  min-width: 0;
+  gap: 0.35rem;
+}
+
+.strategy-card small {
+  color: var(--color-muted);
+  line-height: 1.45;
+}
+
+.field-group {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.field-group label {
+  font-weight: 700;
+}
+
+.field-group input,
+.field-group textarea {
+  width: 100%;
+  border: 1px solid var(--color-line);
+  border-radius: 0.65rem;
+  background: white;
+  color: var(--color-ink);
+  padding: 0.8rem 0.9rem;
+  font: inherit;
+}
+
+.field-group input:focus,
+.field-group textarea:focus {
+  border-color: var(--color-accent);
+  outline: 3px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
+}
+
+.field-help,
+.field-errors p {
+  margin: 0;
+  font-size: 0.84rem;
+}
+
+.field-errors {
+  min-height: 1.1rem;
+  color: #9b2c1b;
+}
+
+.primary-action,
+.state-card button,
+.terminal-state button,
+.tracking-resume {
+  border: 0;
+  border-radius: 0.65rem;
+  background: var(--color-ink);
+  color: white;
+  cursor: pointer;
+  padding: 0.8rem 1rem;
+  font-weight: 750;
+}
+
+.primary-action:disabled {
+  cursor: wait;
+  opacity: 0.55;
+}
+
+.submit-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+}
+
+.loading-spinner {
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 auto;
+  border: 0.15rem solid rgb(255 255 255 / 45%);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: loading-spin 0.8s linear infinite;
+}
+
+@keyframes loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.progress-panel {
+  position: sticky;
+  top: 1.5rem;
+}
+
+.progress-list {
+  display: grid;
+  gap: 0.85rem;
+  margin: 1.5rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.progress-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  color: var(--color-muted);
+}
+
+.progress-list .step-marker {
+  width: 1.25rem;
+  flex: 0 0 auto;
+  text-align: center;
+  font-weight: 800;
+}
+
+.progress-list li[data-state='completed'],
+.progress-list li[data-state='active'] {
+  color: var(--color-ink);
+  font-weight: 700;
+}
+
+.progress-list li[data-state='completed'] .step-marker {
+  color: var(--color-accent-strong);
+}
+
+.progress-list li[data-state='active'] .step-marker {
+  color: var(--color-accent-strong);
+}
+
+.progress-message {
+  font-weight: 700;
+}
+
+.processing-intro {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: 1.25rem;
+}
+
+.processing-intro p {
+  margin: 0;
+  color: var(--color-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-spinner {
+    animation-duration: 1.6s;
+  }
+}
+
+.polling-warning,
+.polling-error,
+.terminal-state,
+.state-card--error {
+  color: #7a2919;
+}
+
+.polling-warning,
+.polling-error {
+  border-radius: 0.6rem;
+  background: #fff0e8;
+  padding: 0.75rem;
+  font-size: 0.88rem;
+}
+
+.terminal-state {
+  margin-top: 1.5rem;
+  border-top: 1px solid var(--color-line);
+  padding-top: 1.5rem;
+}
+
+.state-card {
+  margin-bottom: 1.5rem;
+  padding: 1.25rem;
+}
+
+.state-card h2,
+.state-card p {
+  margin-top: 0;
+}
+
+.state-card a {
+  display: inline-block;
+  text-decoration: none;
+}
+
+@media (max-width: 50rem) {
+  .page-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .generation-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .strategy-options {
+    grid-template-columns: 1fr;
+  }
+
+  .progress-panel {
+    position: static;
+  }
+}
