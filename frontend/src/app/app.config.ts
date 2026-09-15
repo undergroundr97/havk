@@ -8,7 +8,7 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 
 import { environment } from '../environments/environment';
-import { demoRoutes } from './demo/demo.routes';
+import { routes } from './app.routes';
 import { demoApiInterceptor } from './demo/demo-api.interceptor';
 import { API_CONFIG } from './core/config/api-config';
 import { httpErrorInterceptor } from './core/http/http-error.interceptor';
@@ -19,7 +19,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(
-      demoRoutes,
+      routes,
       withInMemoryScrolling({
         anchorScrolling: 'enabled',
         scrollPositionRestoration: 'enabled',

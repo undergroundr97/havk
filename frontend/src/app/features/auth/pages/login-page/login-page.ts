@@ -13,6 +13,8 @@ interface LoginFormModel {
 
 type SubmissionState = 'idle' | 'loading' | 'success' | 'error';
 
+const REMEMBER_EMAIL_KEY = 'havk-remembered-email';
+
 @Component({
   selector: 'app-login-page',
   standalone: true,
@@ -29,7 +31,11 @@ export class LoginPage {
   protected readonly submissionState = signal<SubmissionState>('idle');
   protected readonly submissionMessage = signal<string | null>(null);
   protected readonly registered = this.route.snapshot.queryParamMap.get('registered') === 'true';
-  protected readonly model = signal<LoginFormModel>({ email: '', password: '' });
+  protected readonly rememberMe = signal(false);
+  protected readonly model = signal<LoginFormModel>({
+    email: this.readRememberedEmail() ?? '',
+    password: '',
+  });
   protected readonly loginForm = form(this.model, (login) => {
     required(login.email, { message: 'Informe seu e-mail.' });
     email(login.email, { message: 'Informe um e-mail válido.' });
@@ -37,6 +43,14 @@ export class LoginPage {
     required(login.password, { message: 'Informe sua senha.' });
     maxLength(login.password, 128, { message: 'Use no máximo 128 caracteres.' });
   });
+
+  constructor() {
+    if (this.readRememberedEmail()) this.rememberMe.set(true);
+  }
+
+  protected toggleRemember(event: Event): void {
+    this.rememberMe.set((event.target as HTMLInputElement).checked);
+  }
 
   protected async submitLogin(event: Event): Promise<void> {
     event.preventDefault();
@@ -48,11 +62,10 @@ export class LoginPage {
       },
       action: async () => {
         this.submissionState.set('loading');
+        const email = this.model().email.trim();
         try {
-          await this.auth.login({
-            email: this.model().email.trim(),
-            password: this.model().password,
-          });
+          await this.auth.login({ email, password: this.model().password });
+          this.persistRememberedEmail(email);
           this.submissionState.set('success');
           await this.router.navigateByUrl(this.safeReturnUrl());
         } catch (error: unknown) {
@@ -80,5 +93,22 @@ export class LoginPage {
 
   private safeReturnUrl(): string {
     return safeInternalReturnUrl(this.route.snapshot.queryParamMap.get('returnUrl'));
+  }
+
+  private readRememberedEmail(): string | null {
+    try {
+      return localStorage.getItem(REMEMBER_EMAIL_KEY);
+    } catch {
+      return null;
+    }
+  }
+
+  private persistRememberedEmail(email: string): void {
+    try {
+      if (this.rememberMe()) localStorage.setItem(REMEMBER_EMAIL_KEY, email);
+      else localStorage.removeItem(REMEMBER_EMAIL_KEY);
+    } catch {
+      /* ignore storage errors (e.g. private browsing) */
+    }
   }
 }
