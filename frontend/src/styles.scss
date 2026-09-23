@@ -1,6 +1,15 @@
+
 @use './authenticated-theme';
 
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
 :root {
+  color-scheme: light;
+  --havk-bg: #1e1e1e;
   color-scheme: light;
   --havk-bg: #1e1e1e;
   --havk-surface: #2a2a2a;

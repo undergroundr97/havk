@@ -1,0 +1,324 @@
+:host {
+  --orange: #ff6a00;
+  --orange-light: #ffb15c;
+  --bg: #0a0a0a;
+  --card: #121214;
+  --text-muted: rgba(255, 255, 255, 0.72);
+  --line: rgba(255, 255, 255, 0.08);
+  display: block;
+}
+
+/* ---------- Layout ---------- */
+.login {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: calc(100vh - 115px);
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  gap: 4rem;
+  padding: 4rem clamp(1.5rem, 4vw, 3rem);
+  background: var(--bg);
+  color: #fff;
+}
+
+.login__glow {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 45% 55% at 22% 95%, rgba(255, 106, 0, 0.55), transparent 70%),
+    radial-gradient(ellipse 70% 70% at 25% 80%, rgba(140, 40, 0, 0.35), transparent 75%);
+}
+
+/* ---------- Lado esquerdo ---------- */
+.login__hero {
+  max-width: 620px;
+}
+
+.login__eyebrow {
+  display: block;
+  margin-bottom: 1.25rem;
+  color: var(--orange);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.login__title {
+  margin: 0 0 1.5rem;
+  font-size: clamp(3rem, 7vw, 6rem);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+}
+
+.login__title-accent {
+  display: block;
+  background: linear-gradient(90deg, var(--orange), var(--orange-light));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.login__subtitle {
+  margin: 0 0 2rem;
+  max-width: 34ch;
+  font-size: 1.35rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.login__checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: rgba(255, 255, 255, 0.65);
+
+  li::before {
+    content: '✓';
+    margin-right: 0.5rem;
+    color: var(--orange);
+  }
+}
+
+/* ---------- Card ---------- */
+.login__card {
+  display: flex;
+  flex-direction: column;
+  padding: 3rem;
+  border-radius: 28px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 40%), var(--card);
+  border: 1px solid var(--line);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+}
+
+.login__hint {
+  margin: 1.25rem 0;
+  text-align: center;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.login__divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.95rem;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.login__field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.25rem;
+
+  label {
+    margin-bottom: 0.6rem;
+    font-weight: 600;
+  }
+
+  input {
+    height: 64px;
+    padding: 0 1rem;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: #0b0b0d;
+    color: #fff;
+    font: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: var(--orange);
+      box-shadow: 0 0 0 4px rgba(255, 106, 0, 0.15), 0 0 24px rgba(255, 106, 0, 0.25);
+    }
+
+    &[aria-invalid='true'] {
+      border-color: rgba(255, 70, 70, 0.6);
+    }
+  }
+}
+
+.login__errors p {
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+  color: #ff7b7b;
+}
+
+.login__remember {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.75rem;
+  color: var(--text-muted);
+  cursor: pointer;
+
+  input {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--orange);
+  }
+}
+
+.login__message {
+  margin: 0 0 1.25rem;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  font-size: 0.95rem;
+
+  &--success {
+    background: rgba(60, 200, 120, 0.1);
+    color: #7ee2a8;
+  }
+
+  &--error {
+    background: rgba(255, 60, 60, 0.1);
+    color: #ff8f8f;
+  }
+}
+
+.login__switch {
+  margin: 1.5rem 0 0;
+  text-align: center;
+  color: var(--text-muted);
+
+  a {
+    color: var(--orange);
+    font-weight: 600;
+  }
+}
+
+/* ---------- Botão com luz andando ---------- */
+.glow-btn {
+  --c1: #ff5a00;
+  --c2: #ffd27a;
+  --base: rgba(255, 90, 0, 0.35);
+  --speed: 4s;
+
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  height: 64px;
+  border: 0;
+  border-radius: 16px;
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s, opacity 0.2s;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    border-radius: inherit;
+    background: conic-gradient(
+      from var(--angle),
+      transparent 0deg,
+      transparent 200deg,
+      var(--c1) 290deg,
+      var(--c2) 330deg,
+      var(--c1) 350deg,
+      transparent 360deg
+    );
+    filter: blur(14px);
+    opacity: 0.85;
+    animation: glow-spin var(--speed) linear infinite;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    border: 2px solid transparent;
+    background:
+      linear-gradient(#0d0d0f, #0d0d0f) padding-box,
+      conic-gradient(
+        from var(--angle),
+        var(--base) 0deg,
+        var(--base) 200deg,
+        var(--c1) 290deg,
+        var(--c2) 330deg,
+        var(--c1) 350deg,
+        var(--base) 360deg
+      ) border-box;
+    animation: glow-spin var(--speed) linear infinite;
+  }
+
+  &:hover:not(:disabled) {
+    --speed: 2s;
+    transform: translateY(-1px);
+  }
+
+  &:hover:not(:disabled)::before {
+    opacity: 1;
+    filter: blur(18px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--c2);
+    outline-offset: 4px;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  &:disabled::before,
+  &:disabled::after {
+    animation-play-state: paused;
+  }
+}
+
+.glow-btn--youtube {
+  --c1: #ff1f1f;
+  --c2: #ff9a8a;
+  --base: rgba(255, 40, 40, 0.35);
+}
+
+@keyframes glow-spin {
+  to {
+    --angle: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glow-btn::before,
+  .glow-btn::after {
+    animation: none;
+  }
+}
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 960px) {
+  .login {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .login__card {
+    padding: 2rem 1.5rem;
+  }
+}

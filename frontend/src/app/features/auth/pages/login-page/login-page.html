@@ -1,67 +1,41 @@
-<section class="auth-page shell" aria-labelledby="login-title">
-  <svg class="auth-backdrop" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
-    <polygon points="80,60 260,140 40,220" fill="var(--auth-orange)" opacity="0.16" />
-    <polygon points="1400,40 1560,160 1320,180" fill="var(--auth-orange-light)" opacity="0.14" />
-    <polygon points="1200,650 1420,700 1300,820" fill="var(--auth-orange-deep)" opacity="0.18" />
-    <polygon points="120,700 300,760 160,860" fill="var(--auth-orange)" opacity="0.12" />
-    <polygon points="60,420 180,380 140,500" fill="var(--auth-orange-light)" opacity="0.1" />
-    <polygon points="1350,300 1480,260 1460,380" fill="var(--auth-orange-deep)" opacity="0.14" />
-    <polygon points="500,80 620,40 640,160" fill="none" stroke="var(--auth-orange-light)" stroke-width="1.2" opacity="0.4" />
-    <polygon points="900,700 1050,660 1020,800" fill="none" stroke="var(--auth-orange-light)" stroke-width="1.2" opacity="0.35" />
-    <polygon points="1500,500 1580,420 1560,560" fill="none" stroke="var(--auth-orange)" stroke-width="1" opacity="0.3" />
-    <polygon points="750,120 820,60 860,150" fill="none" stroke="var(--auth-orange)" stroke-width="1" opacity="0.3" />
+<section class="login" aria-labelledby="login-title">
+  <div class="login__glow" aria-hidden="true"></div>
 
-    <g stroke="var(--auth-line)" stroke-width="1" opacity="0.5">
-      <line x1="150" y1="150" x2="300" y2="300" />
-      <line x1="300" y1="300" x2="500" y2="200" />
-      <line x1="1100" y1="180" x2="1300" y2="260" />
-      <line x1="1300" y1="260" x2="1450" y2="420" />
-      <line x1="1350" y1="600" x2="1100" y2="750" />
-      <line x1="850" y1="800" x2="600" y2="820" />
-      <line x1="350" y1="700" x2="150" y2="550" />
-      <line x1="80" y1="350" x2="150" y2="150" />
-    </g>
-
-    <g fill="var(--auth-orange-light)">
-      <circle cx="150" cy="150" r="3" />
-      <circle cx="300" cy="300" r="2" />
-      <circle cx="500" cy="200" r="2.5" />
-      <circle cx="700" cy="120" r="2" />
-      <circle cx="1100" cy="180" r="3" />
-      <circle cx="1300" cy="260" r="2" />
-      <circle cx="1450" cy="420" r="2.5" />
-      <circle cx="1350" cy="600" r="3" />
-      <circle cx="1100" cy="750" r="2" />
-      <circle cx="850" cy="800" r="2.5" />
-      <circle cx="600" cy="820" r="2" />
-      <circle cx="350" cy="700" r="3" />
-      <circle cx="150" cy="550" r="2" />
-      <circle cx="80" cy="350" r="2.5" />
-      <circle cx="950" cy="450" r="1.8" />
-      <circle cx="1200" cy="500" r="2.2" />
-    </g>
-  </svg>
-
-  <div class="auth-intro">
-    <p class="eyebrow">Bem-vindo de volta</p>
-    <h1 id="login-title">Entre no HAVK.</h1>
-    <p>Retome o contexto do seu canal e continue construindo a próxima ideia.</p>
+  <div class="login__hero">
+    <span class="login__eyebrow">Bem-vindo de volta</span>
+    <h1 id="login-title" class="login__title">
+      Entre no <span class="login__title-accent">HAVK.</span>
+    </h1>
+    <p class="login__subtitle">
+      Retome o contexto do seu canal e continue construindo a próxima ideia.
+    </p>
+    <ul class="login__checks">
+      <li>Seu histórico de relatórios</li>
+      <li>Tendências já analisadas</li>
+      <li>Ideias salvas do seu canal</li>
+    </ul>
   </div>
 
-  <form class="auth-card" novalidate (submit)="submitLogin($event)">
+  <form class="login__card" novalidate (submit)="submitLogin($event)">
     @if (registered) {
-      <p class="form-message form-message--success" role="status">
+      <p class="login__message login__message--success" role="status">
         Conta criada. Agora entre com seus dados.
       </p>
     }
 
-    <button type="button" class="oauth-action" [disabled]="submissionState() === 'loading'" (click)="enterWithYouTube()">
+    <button
+      type="button"
+      class="glow-btn glow-btn--youtube"
+      [disabled]="submissionState() === 'loading'"
+      (click)="enterWithYouTube()"
+    >
       Entrar com YouTube
     </button>
-    <p class="oauth-hint">Use sua identidade Google e autorize somente a leitura do seu canal.</p>
-    <div class="auth-divider" aria-hidden="true"><span>ou use e-mail e senha</span></div>
 
-    <div class="field-group">
+    <p class="login__hint">Use sua identidade Google e autorize somente a leitura do seu canal.</p>
+    <div class="login__divider" aria-hidden="true"><span>ou use e-mail e senha</span></div>
+
+    <div class="login__field">
       <label for="login-email">E-mail</label>
       <input
         id="login-email"
@@ -72,7 +46,7 @@
         [attr.aria-invalid]="loginForm.email().invalid()"
         aria-describedby="login-email-errors"
       />
-      <div id="login-email-errors" class="field-errors" aria-live="polite">
+      <div id="login-email-errors" class="login__errors" aria-live="polite">
         @if (loginForm.email().touched()) {
           @for (error of loginForm.email().errors(); track error.kind + $index) {
             <p>{{ error.message }}</p>
@@ -81,7 +55,7 @@
       </div>
     </div>
 
-    <div class="field-group">
+    <div class="login__field">
       <label for="login-password">Senha</label>
       <input
         id="login-password"
@@ -91,7 +65,7 @@
         [attr.aria-invalid]="loginForm.password().invalid()"
         aria-describedby="login-password-errors"
       />
-      <div id="login-password-errors" class="field-errors" aria-live="polite">
+      <div id="login-password-errors" class="login__errors" aria-live="polite">
         @if (loginForm.password().touched()) {
           @for (error of loginForm.password().errors(); track error.kind + $index) {
             <p>{{ error.message }}</p>
@@ -100,24 +74,23 @@
       </div>
     </div>
 
-    <div class="remember-row">
-      <label for="login-remember">
-        <input id="login-remember" type="checkbox" [checked]="rememberMe()" (change)="toggleRemember($event)" />
-        Lembrar meu e-mail
-      </label>
-    </div>
+    <label class="login__remember" for="login-remember">
+      <input id="login-remember" type="checkbox" [checked]="rememberMe()" (change)="toggleRemember($event)" />
+      Lembrar meu e-mail
+    </label>
 
     @if (submissionMessage(); as message) {
-      <p class="form-message form-message--error" role="alert">{{ message }}</p>
+      <p class="login__message login__message--error" role="alert">{{ message }}</p>
     }
 
-    <button type="submit" [disabled]="loginForm().submitting()">
+    <button type="submit" class="glow-btn" [disabled]="loginForm().submitting()">
       @if (loginForm().submitting()) {
         Entrando…
       } @else {
         Entrar
       }
     </button>
-    <p class="auth-switch">Ainda não tem conta? <a routerLink="/cadastro">Cadastre-se</a>.</p>
+
+    <p class="login__switch">Ainda não tem conta? <a routerLink="/cadastro">Cadastre-se</a>.</p>
   </form>
 </section>

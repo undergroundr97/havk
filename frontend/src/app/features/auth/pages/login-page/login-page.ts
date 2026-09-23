@@ -20,7 +20,7 @@ const REMEMBER_EMAIL_KEY = 'havk-remembered-email';
   standalone: true,
   imports: [FormField, RouterLink],
   templateUrl: './login-page.html',
-  styleUrl: '../../auth-form.scss',
+ styleUrl: './login-page.scss',
 })
 export class LoginPage {
   private readonly auth = inject(AuthService);
