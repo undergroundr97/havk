@@ -1,39 +1,316 @@
 :host {
+  /* Paleta (a mesma do login) */
+  --signup-accent: #ff7a1a;
+  --signup-accent-hover: #ff8c3a;
+  --signup-bg: #0a0a0a;
+  --signup-surface: #121212;
+  --signup-border: #1f1f1f;
+  --signup-line: #262626;
+  --signup-input-line: #333333;
+  --signup-text: #ffffff;
+  --signup-text-muted: #a3a3a3;
+  --signup-text-subtle: #8a8a8a;
+
+  /* Ajuste para a altura real do seu header */
+  --signup-header-h: 88px;
+
   display: block;
+  background: var(--signup-bg);
+  color: var(--signup-text);
+  color-scheme: dark;
 }
 
-.account-page {
-  max-width: 52rem;
-  padding-block: clamp(4rem, 10vw, 8rem);
+:host *,
+:host *::before,
+:host *::after {
+  box-sizing: border-box;
 }
 
-.eyebrow {
-  color: var(--color-accent-strong);
-  font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
+.signup {
+  /* O header é fixo e fica por cima da página: o conteúdo começa abaixo dele */
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 80px;
+  padding: calc(var(--signup-header-h) + 32px) 40px 40px;
 }
 
-h1 {
+/* ---------- Painel ---------- */
+
+.signup__panel {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  padding: 56px;
+  background: var(--signup-surface);
+  border: 1px solid var(--signup-border);
+  border-radius: 20px;
+}
+
+.signup__eyebrow {
   margin: 0;
-  font-size: clamp(3rem, 7vw, 5.5rem);
-  letter-spacing: -0.06em;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--signup-accent);
 }
 
-.account-email,
-.account-page > p {
-  color: var(--color-muted);
-  line-height: 1.7;
+.signup__intro {
+  margin: auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
-button {
-  border: 1px solid var(--color-ink);
-  border-radius: 0.7rem;
+.signup__title {
+  margin: 0;
+  font-size: clamp(48px, 6.2vw, 88px);
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--signup-text);
+}
+
+.signup__lead {
+  margin: 0;
+  max-width: 420px;
+  font-size: 19px;
+  line-height: 1.6;
+  color: var(--signup-text-muted);
+}
+
+/* ---------- Formulário ---------- */
+
+.signup__form-area {
+  align-self: center;
+  justify-self: center;
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.signup__form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.signup__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.signup__label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--signup-text-muted);
+}
+
+.signup__input {
+  height: 44px;
+  padding: 0;
   background: transparent;
-  color: var(--color-ink);
-  cursor: pointer;
+  border: 0;
+  border-bottom: 1px solid var(--signup-input-line);
+  border-radius: 0;
+  color: var(--signup-text);
   font: inherit;
-  font-weight: 750;
-  padding: 0.75rem 1rem;
+  font-size: 16px;
+  transition: border-color 0.15s ease;
+}
+
+.signup__input:focus {
+  outline: none;
+  border-bottom-color: var(--signup-accent);
+}
+
+/* Campo inválido depois de tocado (classes que o Angular já aplica) */
+.signup__input.ng-invalid.ng-touched {
+  border-bottom-color: var(--signup-accent);
+}
+
+/* Evita o fundo claro do autocomplete do navegador */
+.signup__input:-webkit-autofill,
+.signup__input:-webkit-autofill:hover,
+.signup__input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--signup-text);
+  -webkit-box-shadow: 0 0 0 1000px var(--signup-bg) inset;
+  caret-color: var(--signup-text);
+}
+
+.signup__hint {
+  margin: 4px 0 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--signup-text-subtle);
+}
+
+.signup__hint--center {
+  margin: 0;
+  text-align: center;
+}
+
+/* Para as suas mensagens de validação, se houver */
+.signup__error {
+  margin: 4px 0 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--signup-accent);
+}
+
+/* ---------- Botões ---------- */
+
+.signup__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 52px;
+  margin-top: 4px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.signup__btn:focus-visible {
+  outline: 2px solid var(--signup-accent);
+  outline-offset: 3px;
+}
+
+.signup__btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.signup__btn--primary {
+  border: 0;
+  background: var(--signup-accent);
+  color: var(--signup-bg);
+}
+
+.signup__btn--primary:hover:not(:disabled) {
+  background: var(--signup-accent-hover);
+}
+
+.signup__btn--outline {
+  margin-top: 0;
+  border: 1px solid var(--signup-input-line);
+  background: transparent;
+  color: var(--signup-text);
+}
+
+.signup__btn--outline:hover:not(:disabled) {
+  border-color: #555555;
+}
+
+.signup__btn-icon {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ---------- Divisor, YouTube e troca para login ---------- */
+
+.signup__divider {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 13px;
+  color: var(--signup-text-subtle);
+}
+
+.signup__divider::before,
+.signup__divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--signup-line);
+}
+
+.signup__oauth {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.signup__switch {
+  margin: 8px 0 0;
+  font-size: 14px;
+  text-align: center;
+  color: var(--signup-text-muted);
+}
+
+.signup__link {
+  font-weight: 600;
+  color: var(--signup-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.15s ease;
+}
+
+.signup__link:hover {
+  color: var(--signup-accent);
+}
+
+.signup__link:focus-visible {
+  outline: 2px solid var(--signup-accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ---------- Responsivo ---------- */
+
+@media (max-width: 1100px) {
+  .signup {
+    gap: 48px;
+  }
+
+  .signup__panel {
+    padding: 40px;
+  }
+}
+
+@media (max-width: 860px) {
+  .signup {
+    min-height: auto;
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding: calc(var(--signup-header-h) + 16px) 16px 48px;
+  }
+
+  .signup__panel {
+    gap: 32px;
+    padding: 32px 24px;
+  }
+
+  .signup__intro {
+    margin: 0;
+  }
+
+  .signup__lead {
+    font-size: 17px;
+  }
+
+  .signup__form-area {
+    max-width: 420px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .signup__input,
+  .signup__btn,
+  .signup__link {
+    transition: none;
+  }
 }

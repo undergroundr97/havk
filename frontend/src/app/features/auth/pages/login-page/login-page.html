@@ -1,96 +1,83 @@
-<section class="login" aria-labelledby="login-title">
-  <div class="login__glow" aria-hidden="true"></div>
+<div class="login">
+  <!-- Painel à esquerda -->
+  <section class="login__panel">
+    <p class="login__eyebrow">Bem-vindo de volta</p>
 
-  <div class="login__hero">
-    <span class="login__eyebrow">Bem-vindo de volta</span>
-    <h1 id="login-title" class="login__title">
-      Entre no <span class="login__title-accent">HAVK.</span>
-    </h1>
-    <p class="login__subtitle">
-      Retome o contexto do seu canal e continue construindo a próxima ideia.
-    </p>
-    <ul class="login__checks">
-      <li>Seu histórico de relatórios</li>
-      <li>Tendências já analisadas</li>
-      <li>Ideias salvas do seu canal</li>
-    </ul>
-  </div>
-
-  <form class="login__card" novalidate (submit)="submitLogin($event)">
-    @if (registered) {
-      <p class="login__message login__message--success" role="status">
-        Conta criada. Agora entre com seus dados.
+    <div class="login__intro">
+      <h1 class="login__title">Entre no<br />HAVK.</h1>
+      <p class="login__lead">
+        Retome o contexto do seu canal e continue construindo a próxima ideia.
       </p>
-    }
-
-    <button
-      type="button"
-      class="glow-btn glow-btn--youtube"
-      [disabled]="submissionState() === 'loading'"
-      (click)="enterWithYouTube()"
-    >
-      Entrar com YouTube
-    </button>
-
-    <p class="login__hint">Use sua identidade Google e autorize somente a leitura do seu canal.</p>
-    <div class="login__divider" aria-hidden="true"><span>ou use e-mail e senha</span></div>
-
-    <div class="login__field">
-      <label for="login-email">E-mail</label>
-      <input
-        id="login-email"
-        type="email"
-        autocomplete="email"
-        inputmode="email"
-        [formField]="loginForm.email"
-        [attr.aria-invalid]="loginForm.email().invalid()"
-        aria-describedby="login-email-errors"
-      />
-      <div id="login-email-errors" class="login__errors" aria-live="polite">
-        @if (loginForm.email().touched()) {
-          @for (error of loginForm.email().errors(); track error.kind + $index) {
-            <p>{{ error.message }}</p>
-          }
-        }
-      </div>
     </div>
 
-    <div class="login__field">
-      <label for="login-password">Senha</label>
-      <input
-        id="login-password"
-        type="password"
-        autocomplete="current-password"
-        [formField]="loginForm.password"
-        [attr.aria-invalid]="loginForm.password().invalid()"
-        aria-describedby="login-password-errors"
-      />
-      <div id="login-password-errors" class="login__errors" aria-live="polite">
-        @if (loginForm.password().touched()) {
-          @for (error of loginForm.password().errors(); track error.kind + $index) {
-            <p>{{ error.message }}</p>
-          }
-        }
+    <ul class="login__benefits">
+      <li class="login__benefit">
+        Seu histórico de relatórios
+        <svg class="login__check" viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M3 8.5l3 3 7-7" />
+        </svg>
+      </li>
+      <li class="login__benefit">
+        Tendências já analisadas
+        <svg class="login__check" viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M3 8.5l3 3 7-7" />
+        </svg>
+      </li>
+      <li class="login__benefit">
+        Ideias salvas do seu canal
+        <svg class="login__check" viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M3 8.5l3 3 7-7" />
+        </svg>
+      </li>
+    </ul>
+  </section>
+
+  <!-- Formulário à direita -->
+  <section class="login__form-area">
+    <form class="login__form">
+      <div class="login__field">
+        <label class="login__label" for="login-email">E-mail</label>
+        <input
+          class="login__input"
+          id="login-email"
+          type="email"
+          autocomplete="email"
+        />
       </div>
-    </div>
 
-    <label class="login__remember" for="login-remember">
-      <input id="login-remember" type="checkbox" [checked]="rememberMe()" (change)="toggleRemember($event)" />
-      Lembrar meu e-mail
-    </label>
+      <div class="login__field">
+        <label class="login__label" for="login-senha">Senha</label>
+        <input
+          class="login__input"
+          id="login-senha"
+          type="password"
+          autocomplete="current-password"
+        />
+      </div>
 
-    @if (submissionMessage(); as message) {
-      <p class="login__message login__message--error" role="alert">{{ message }}</p>
-    }
+      <label class="login__remember">
+        <input class="login__checkbox" type="checkbox" />
+        <span>Lembrar meu e-mail</span>
+      </label>
 
-    <button type="submit" class="glow-btn" [disabled]="loginForm().submitting()">
-      @if (loginForm().submitting()) {
-        Entrando…
-      } @else {
+      <button class="login__btn login__btn--primary" type="submit">
         Entrar
-      }
-    </button>
+      </button>
+    </form>
 
-    <p class="login__switch">Ainda não tem conta? <a routerLink="/cadastro">Cadastre-se</a>.</p>
-  </form>
-</section>
+    <div class="login__divider"><span>ou</span></div>
+
+    <div class="login__oauth">
+      <button class="login__btn login__btn--outline" type="button">
+        <svg class="login__btn-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="2.5" y="5" width="19" height="14" rx="4" />
+          <path d="M10 9.5v5l4.5-2.5z" />
+        </svg>
+        Entrar com YouTube
+      </button>
+      <p class="login__hint">
+        Use sua identidade Google e autorize somente a leitura do seu canal.
+      </p>
+    </div>
+  </section>
+</div>

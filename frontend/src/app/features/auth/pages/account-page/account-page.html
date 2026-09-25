@@ -1,10 +1,84 @@
-<section class="account-page shell" aria-labelledby="account-title">
-  @if (session.user(); as user) {
-    <p class="eyebrow">Sessão protegida</p>
-    <h1 id="account-title">Olá, {{ user.name }}.</h1>
-    <p class="account-email">{{ user.email }}</p>
-    <p>Sua conta está pronta. Complete seu perfil para personalizar as próximas ideias.</p>
-    <p><a routerLink="/perfil/onboarding">Configurar perfil do criador</a></p>
-    <button type="button" (click)="logout()">Sair com segurança</button>
-  }
-</section>
+<div class="signup">
+  <!-- Painel à esquerda -->
+  <section class="signup__panel">
+    <p class="signup__eyebrow">Sua jornada começa aqui</p>
+
+    <div class="signup__intro">
+      <h1 class="signup__title">Crie sua<br />conta.</h1>
+      <p class="signup__lead">
+        Uma identidade segura para construir ideias alinhadas ao seu canal.
+      </p>
+    </div>
+  </section>
+
+  <!-- Formulário à direita -->
+  <section class="signup__form-area">
+    <form class="signup__form">
+      <div class="signup__field">
+        <label class="signup__label" for="signup-nome">Nome</label>
+        <input
+          class="signup__input"
+          id="signup-nome"
+          type="text"
+          autocomplete="name"
+        />
+      </div>
+
+      <div class="signup__field">
+        <label class="signup__label" for="signup-email">E-mail</label>
+        <input
+          class="signup__input"
+          id="signup-email"
+          type="email"
+          autocomplete="email"
+        />
+      </div>
+
+      <div class="signup__field">
+        <label class="signup__label" for="signup-senha">Senha</label>
+        <input
+          class="signup__input"
+          id="signup-senha"
+          type="password"
+          autocomplete="new-password"
+          aria-describedby="signup-senha-dica"
+        />
+        <p class="signup__hint" id="signup-senha-dica">Use de 12 a 128 caracteres.</p>
+      </div>
+
+      <div class="signup__field">
+        <label class="signup__label" for="signup-confirmacao">Confirme a senha</label>
+        <input
+          class="signup__input"
+          id="signup-confirmacao"
+          type="password"
+          autocomplete="new-password"
+        />
+      </div>
+
+      <button class="signup__btn signup__btn--primary" type="submit">
+        Criar conta
+      </button>
+    </form>
+
+    <div class="signup__divider"><span>ou</span></div>
+
+    <div class="signup__oauth">
+      <button class="signup__btn signup__btn--outline" type="button">
+        <svg class="signup__btn-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="2.5" y="5" width="19" height="14" rx="4" />
+          <path d="M10 9.5v5l4.5-2.5z" />
+        </svg>
+        Criar conta com YouTube
+      </button>
+      <p class="signup__hint signup__hint--center">
+        O HAVK cria sua conta com o e-mail verificado pelo Google e conecta o
+        canal autorizado.
+      </p>
+    </div>
+
+    <p class="signup__switch">
+      Já tem uma conta? <a class="signup__link" href="#">Entre</a>.
+    </p>
+  </section>
+</div>

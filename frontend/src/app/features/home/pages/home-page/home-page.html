@@ -1,114 +1,289 @@
-<section class="hero" id="inicio" aria-labelledby="hero-title">
-  <div class="hero__glow" aria-hidden="true"></div>
-  <div class="landing-container hero__grid">
-    <div class="hero__content">
-      <span class="eyebrow">Inteligência para criadores de conteúdo</span>
-      <h1 id="hero-title">
-        Transforme sinais do seu canal em
-        <span class="text-gradient">ideias que fazem sentido.</span>
-      </h1>
-      <p class="hero__description">
-        O HAVK organiza o contexto do seu canal, identifica tendências relevantes e gera relatórios
-        com ideias de vídeo alinhadas ao seu público e posicionamento.
+<!-- ============ Hero ============ -->
+<section class="hero">
+  <div class="hero__top">
+    <p class="eyebrow">Inteligência para criadores de conteúdo</p>
+    <h1 class="hero__title">
+      Transforme sinais do seu canal em ideias que fazem sentido<span class="accent">.</span>
+    </h1>
+  </div>
+
+  <div class="hero__middle">
+    <div class="hero__intro">
+      <p class="hero__lead">
+        O HAVK organiza o contexto do seu canal, identifica tendências
+        relevantes e gera relatórios com ideias de vídeo alinhadas ao seu
+        público e posicionamento.
       </p>
 
-      <div class="hero__actions">
-        <a class="button button--primary button--large" routerLink="/cadastro">Começar agora</a>
-        <a class="button button--secondary button--large" href="#como-funciona">
-          Ver como funciona
-        </a>
+      <div class="actions">
+        <a class="btn btn--primary" href="#">Começar agora</a>
+        <a class="btn btn--outline" href="#como-funciona">Ver como funciona</a>
       </div>
-
-      <ul class="hero__checklist" aria-label="Diferenciais da plataforma">
-        <li><span aria-hidden="true">✓</span> Perfil orientado por dados</li>
-        <li><span aria-hidden="true">✓</span> Tendências contextualizadas</li>
-        <li><span aria-hidden="true">✓</span> Ideias prontas para desenvolver</li>
-      </ul>
     </div>
+
+    <ul class="checklist">
+      <li class="checklist__item">
+        Perfil orientado por dados
+        <svg class="check" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" /></svg>
+      </li>
+      <li class="checklist__item">
+        Tendências contextualizadas
+        <svg class="check" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" /></svg>
+      </li>
+      <li class="checklist__item">
+        Ideias prontas para desenvolver
+        <svg class="check" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" /></svg>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Faixa de sinal: decorativa. A barra laranja é a "próxima ideia". -->
+  <div class="hero__signal" aria-hidden="true">
+    <span class="hero__peak-label">Sua próxima ideia</span>
+    <span class="hero__bar" style="--h: 44%; --i: 0"></span>
+    <span class="hero__bar" style="--h: 43%; --i: 1"></span>
+    <span class="hero__bar" style="--h: 52%; --i: 2"></span>
+    <span class="hero__bar" style="--h: 39%; --i: 3"></span>
+    <span class="hero__bar" style="--h: 45%; --i: 4"></span>
+    <span class="hero__bar" style="--h: 40%; --i: 5"></span>
+    <span class="hero__bar" style="--h: 35%; --i: 6"></span>
+    <span class="hero__bar" style="--h: 46%; --i: 7"></span>
+    <span class="hero__bar" style="--h: 42%; --i: 8"></span>
+    <span class="hero__bar" style="--h: 53%; --i: 9"></span>
+    <span class="hero__bar" style="--h: 49%; --i: 10"></span>
+    <span class="hero__bar" style="--h: 48%; --i: 11"></span>
+    <span class="hero__bar" style="--h: 48%; --i: 12"></span>
+    <span class="hero__bar" style="--h: 48%; --i: 13"></span>
+    <span class="hero__bar" style="--h: 27%; --i: 14"></span>
+    <span class="hero__bar" style="--h: 21%; --i: 15"></span>
+    <span class="hero__bar" style="--h: 24%; --i: 16"></span>
+    <span class="hero__bar" style="--h: 29%; --i: 17"></span>
+    <span class="hero__bar" style="--h: 25%; --i: 18"></span>
+    <span class="hero__bar" style="--h: 26%; --i: 19"></span>
+    <span class="hero__bar" style="--h: 40%; --i: 20"></span>
+    <span class="hero__bar" style="--h: 25%; --i: 21"></span>
+    <span class="hero__bar" style="--h: 39%; --i: 22"></span>
+    <span class="hero__bar" style="--h: 26%; --i: 23"></span>
+    <span class="hero__bar" style="--h: 20%; --i: 24"></span>
+    <span class="hero__bar" style="--h: 17%; --i: 25"></span>
+    <span class="hero__bar" style="--h: 21%; --i: 26"></span>
+    <span class="hero__bar" style="--h: 35%; --i: 27"></span>
+    <span class="hero__bar" style="--h: 30%; --i: 28"></span>
+    <span class="hero__bar" style="--h: 46%; --i: 29"></span>
+    <span class="hero__bar" style="--h: 55%; --i: 30"></span>
+    <span class="hero__bar" style="--h: 55%; --i: 31"></span>
+    <span class="hero__bar" style="--h: 59%; --i: 32"></span>
+    <span class="hero__bar" style="--h: 48%; --i: 33"></span>
+    <span class="hero__bar" style="--h: 44%; --i: 34"></span>
+    <span class="hero__bar" style="--h: 41%; --i: 35"></span>
+    <span class="hero__bar" style="--h: 45%; --i: 36"></span>
+    <span class="hero__bar" style="--h: 39%; --i: 37"></span>
+    <span class="hero__bar" style="--h: 38%; --i: 38"></span>
+    <span class="hero__bar" style="--h: 50%; --i: 39"></span>
+    <span class="hero__bar" style="--h: 55%; --i: 40"></span>
+    <span class="hero__bar" style="--h: 58%; --i: 41"></span>
+    <span class="hero__bar" style="--h: 69%; --i: 42"></span>
+    <span class="hero__bar" style="--h: 66%; --i: 43"></span>
+    <span class="hero__bar hero__bar--peak" style="--h: 100%; --i: 44"></span>
+    <span class="hero__bar" style="--h: 49%; --i: 45"></span>
+    <span class="hero__bar" style="--h: 38%; --i: 46"></span>
+    <span class="hero__bar" style="--h: 37%; --i: 47"></span>
+    <span class="hero__bar" style="--h: 31%; --i: 48"></span>
+    <span class="hero__bar" style="--h: 24%; --i: 49"></span>
+    <span class="hero__bar" style="--h: 38%; --i: 50"></span>
+    <span class="hero__bar" style="--h: 28%; --i: 51"></span>
+    <span class="hero__bar" style="--h: 38%; --i: 52"></span>
+    <span class="hero__bar" style="--h: 45%; --i: 53"></span>
+    <span class="hero__bar" style="--h: 33%; --i: 54"></span>
+    <span class="hero__bar" style="--h: 36%; --i: 55"></span>
+    <span class="hero__bar" style="--h: 27%; --i: 56"></span>
+    <span class="hero__bar" style="--h: 39%; --i: 57"></span>
+    <span class="hero__bar" style="--h: 45%; --i: 58"></span>
+    <span class="hero__bar" style="--h: 48%; --i: 59"></span>
+    <span class="hero__bar" style="--h: 60%; --i: 60"></span>
+    <span class="hero__bar" style="--h: 55%; --i: 61"></span>
+    <span class="hero__bar" style="--h: 64%; --i: 62"></span>
+    <span class="hero__bar" style="--h: 61%; --i: 63"></span>
   </div>
 </section>
 
-<section class="landing-section" id="beneficios" aria-labelledby="benefits-title">
-  <div class="landing-container">
-    <div class="section-heading">
-      <span class="eyebrow">Por que o HAVK</span>
-      <h2 id="benefits-title">Menos conteúdo genérico. Mais direção para o seu canal.</h2>
-    </div>
+<!-- ============ Por que o HAVK ============ -->
+<section class="section">
+  <div class="section__head">
+    <p class="eyebrow">Por que o HAVK</p>
+    <h2 class="section__title">Menos conteúdo genérico.<br />Mais direção para o seu canal.</h2>
+  </div>
 
-    <div class="card-grid card-grid--four">
-      @for (benefit of benefits; track benefit.title) {
-        <article class="feature-card">
-          <span class="feature-card__icon" aria-hidden="true">{{ benefit.icon }}</span>
-          <h3>{{ benefit.title }}</h3>
-          <p>{{ benefit.description }}</p>
-        </article>
-      }
-    </div>
+  <div class="why">
+    <article class="why__item">
+      <span class="tag">CX</span>
+      <h3 class="item__title">Contexto do canal</h3>
+      <p class="item__text">
+        O HAVK organiza nicho, posicionamento, público e características do
+        canal para orientar cada análise.
+      </p>
+    </article>
+    <article class="why__item">
+      <span class="tag">TE</span>
+      <h3 class="item__title">Tendências com propósito</h3>
+      <p class="item__text">
+        Os sinais são avaliados pelo que realmente combina com o canal, não
+        apenas pelo que está em alta.
+      </p>
+    </article>
+    <article class="why__item">
+      <span class="tag">ID</span>
+      <h3 class="item__title">Ideias estruturadas</h3>
+      <p class="item__text">
+        Cada ideia reúne gancho, solução, diferencial e chamada para ação em
+        uma estrutura prática.
+      </p>
+    </article>
+    <article class="why__item">
+      <span class="tag">EX</span>
+      <h3 class="item__title">Decisões explicáveis</h3>
+      <p class="item__text">
+        Entenda quais sinais sustentam cada recomendação e use o relatório
+        como ponto de partida criativo.
+      </p>
+    </article>
   </div>
 </section>
 
-<section
-  class="landing-section landing-section--alternate"
-  id="como-funciona"
-  aria-labelledby="journey-title"
->
-  <div class="landing-container">
-    <div class="section-heading">
-      <span class="eyebrow">Do canal ao próximo vídeo</span>
-      <h2 id="journey-title">Um fluxo simples para decisões melhores.</h2>
-    </div>
+<!-- ============ Como funciona ============ -->
+<section class="section" id="como-funciona">
+  <div class="section__head">
+    <p class="eyebrow">Do canal ao próximo vídeo</p>
+    <h2 class="section__title">Um fluxo simples para decisões melhores.</h2>
+  </div>
 
-    <ol class="timeline">
-      @for (step of journey; track step.number) {
-        <li class="timeline__step">
-          <span class="timeline__number">{{ step.number }}</span>
-          <span class="timeline__icon" aria-hidden="true">{{ step.icon }}</span>
-          <h3>{{ step.title }}</h3>
-          <p>{{ step.description }}</p>
-        </li>
-      }
-    </ol>
+  <ol class="steps">
+    <li class="step">
+      <div class="step__signal" aria-hidden="true"><span class="step__bar"></span></div>
+      <p class="step__meta"><span class="step__num">01</span><span class="step__code">PF</span></p>
+      <h3 class="item__title">Crie seu perfil</h3>
+      <p class="item__text">
+        Organize o contexto que define sua comunicação, seu nicho e seus
+        objetivos.
+      </p>
+    </li>
+    <li class="step">
+      <div class="step__signal" aria-hidden="true"><span class="step__bar"></span></div>
+      <p class="step__meta"><span class="step__num">02</span><span class="step__code">YT</span></p>
+      <h3 class="item__title">Conecte o canal</h3>
+      <p class="item__text">
+        Associe seu YouTube para reunir contexto e dados autorizados em um só
+        lugar.
+      </p>
+    </li>
+    <li class="step">
+      <div class="step__signal" aria-hidden="true"><span class="step__bar"></span></div>
+      <p class="step__meta"><span class="step__num">03</span><span class="step__code">AN</span></p>
+      <h3 class="item__title">Analise os sinais</h3>
+      <p class="item__text">
+        O HAVK cruza o perfil do canal com tendências e informações
+        relevantes.
+      </p>
+    </li>
+    <li class="step">
+      <div class="step__signal" aria-hidden="true"><span class="step__bar"></span></div>
+      <p class="step__meta"><span class="step__num">04</span><span class="step__code">IA</span></p>
+      <h3 class="item__title">Receba ideias</h3>
+      <p class="item__text">
+        Use relatórios estruturados para decidir e desenvolver o próximo
+        conteúdo.
+      </p>
+    </li>
+  </ol>
+</section>
+
+<!-- ============ Recursos ============ -->
+<section class="section" id="recursos">
+  <div class="section__head">
+    <p class="eyebrow">Inteligência aplicada ao conteúdo</p>
+    <h2 class="section__title">Tudo que sustenta sua próxima ideia.</h2>
+  </div>
+
+  <div class="features">
+    <article class="feature">
+      <span class="feature__num">01</span>
+      <h3 class="item__title">Perfil do criador</h3>
+      <p class="item__text">
+        Centralize as características que definem sua comunicação, seu nicho
+        e sua proposta de valor.
+      </p>
+    </article>
+    <article class="feature">
+      <span class="feature__num">02</span>
+      <h3 class="item__title">Canal conectado</h3>
+      <p class="item__text">
+        Vincule o YouTube à sua conta HAVK e mantenha o contexto associado às
+        análises.
+      </p>
+    </article>
+    <article class="feature">
+      <span class="feature__num">03</span>
+      <h3 class="item__title">Sinais de tendência</h3>
+      <p class="item__text">
+        Organize temas e movimentos relevantes sem perder de vista a
+        identidade do seu conteúdo.
+      </p>
+    </article>
+    <article class="feature">
+      <span class="feature__num">04</span>
+      <h3 class="item__title">Relatórios de conteúdo</h3>
+      <p class="item__text">
+        Reúna contexto, fontes, tendências e ideias de vídeo em uma visão
+        única e consultável.
+      </p>
+    </article>
+    <article class="feature">
+      <span class="feature__num">05</span>
+      <h3 class="item__title">Ideias de vídeo</h3>
+      <p class="item__text">
+        Transforme análises em conceitos acionáveis com uma estrutura clara
+        para desenvolver o roteiro.
+      </p>
+    </article>
+    <article class="feature">
+      <span class="feature__num">06</span>
+      <h3 class="item__title">Histórico organizado</h3>
+      <p class="item__text">
+        Acompanhe relatórios anteriores e preserve o raciocínio usado em cada
+        decisão de conteúdo.
+      </p>
+    </article>
   </div>
 </section>
 
-<section class="landing-section" id="recursos" aria-labelledby="features-title">
-  <div class="landing-container">
-    <div class="section-heading">
-      <span class="eyebrow">Inteligência aplicada ao conteúdo</span>
-      <h2 id="features-title">Tudo que sustenta sua próxima ideia.</h2>
-    </div>
-
-    <div class="card-grid card-grid--three">
-      @for (feature of features; track feature.title) {
-        <article class="feature-card feature-card--numbered">
-          <span class="feature-card__icon" aria-hidden="true">{{ feature.icon }}</span>
-          <h3>{{ feature.title }}</h3>
-          <p>{{ feature.description }}</p>
-        </article>
-      }
-    </div>
+<!-- ============ Sobre ============ -->
+<section class="section section--split" id="sobre">
+  <div class="section__head">
+    <p class="eyebrow">Nossa proposta</p>
+    <h2 class="section__title">Contexto antes da recomendação.</h2>
   </div>
+
+  <p class="about__text">
+    O HAVK nasceu para reduzir a distância entre dados, tendências e decisões
+    criativas. Em vez de entregar sugestões genéricas, a plataforma considera
+    o contexto do canal para ajudar criadores a desenvolver conteúdos
+    coerentes com sua identidade e audiência.
+  </p>
 </section>
 
-<section class="landing-section about-section" id="sobre" aria-labelledby="about-title">
-  <div class="landing-container about-section__grid">
-    <div>
-      <span class="eyebrow">Nossa proposta</span>
-      <h2 id="about-title">Contexto antes da recomendação.</h2>
+<!-- ============ Chamada final ============ -->
+<section class="section">
+  <div class="cta">
+    <div class="cta__head">
+      <p class="eyebrow">Sua próxima grande ideia</p>
+      <h2 class="cta__title">Comece com mais contexto.</h2>
     </div>
-    <p>
-      O HAVK nasceu para reduzir a distância entre dados, tendências e decisões criativas. Em vez de
-      entregar sugestões genéricas, a plataforma considera o contexto do canal para ajudar criadores
-      a desenvolver conteúdos coerentes com sua identidade e audiência.
-    </p>
-  </div>
-</section>
 
-<section class="landing-cta" id="contato" aria-labelledby="cta-title">
-  <div class="landing-container landing-cta__inner">
-    <span class="eyebrow">Sua próxima grande ideia</span>
-    <h2 id="cta-title">Comece com mais contexto.</h2>
-    <p>Transforme sinais dispersos em uma direção clara para o seu canal.</p>
-    <a class="button button--primary button--large" routerLink="/cadastro">Criar minha conta</a>
+    <div class="cta__body">
+      <p class="cta__text">
+        Transforme sinais dispersos em uma direção clara para o seu canal.
+      </p>
+      <a class="btn btn--primary" href="#">Criar minha conta</a>
+    </div>
   </div>
 </section>
